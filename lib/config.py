@@ -5,31 +5,30 @@ def read_config(config_file):
     if not exists(config_file):
         write_default_config(config_file)
 
-    ad_files = list()
+    blacklist = list()
     whitelist = list()
 
     with open(config_file) as raw_config:
         json_file = json.load(raw_config)
-        ad_files = json_file['ad_files']
+        blacklist = json_file['blacklist']
         whitelist = json_file['whitelist']
 
-    return ad_files, whitelist
+    return blacklist, whitelist
 
 def write_default_config(filename):
     with open(filename, 'w') as config_file:
         raw_config = (
             '{\n'
-            '    "ad_files": [\n'
-            '        "domain_1.com",\n'
-            '        "domain_2.com",\n'
-            '        "domain_3.com",\n'
-            '        "domain_4.com",\n'
-            '        "domain_5.com"\n'
+            '    "blacklist": [\n'
+            '        "http://adaway.org/hosts.txt",\n'
+            '        "http://hosts-file.net/ad_servers.asp",\n'
+            '        "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext",\n'
+            '        "http://winhelp2002.mvps.org/hosts.txt",\n'
+            '        "http://someonewhocares.org/hosts/hosts"\n'
             '    ],\n'
             '    "whitelist": [\n'
-            '        "white_1.com",\n'
-            '        "white_2.com",\n'
-            '        "white_3.com"\n'
+            '        "adf.ly",\n'
+            '        "localhost"\n'
             '    ]\n'
             '}'
         )

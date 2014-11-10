@@ -13,7 +13,7 @@ def create_database(filename):
         )
         cursor.execute(sql)
 
-def insert_blacklisted_domains(database, blacklist):
+def insert_blacklisted_domains(database, blacklist, whitelist=None):
     if not exists(database):
         create_database(database)
 
@@ -21,4 +21,10 @@ def insert_blacklisted_domains(database, blacklist):
         cursor = connection.cursor()
 
         for domain in blacklist:
-            cursor.execute('INSERT INTO blacklist VALUES(NULL, ?)', (domain,))
+            if domain in whitelist:
+                continue
+
+            try:
+                cursor.execute('INSERT INTO blacklist VALUES(NULL, ?)', (domain,))
+            except sqlite3.IntegrityError:
+                pass
