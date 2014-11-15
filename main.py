@@ -1,8 +1,18 @@
 #! /usr/bin/env python3
-from lib import config
+from os import getuid
+from os import path
+from sys import exit
+
+from lib import config, database, download
 
 
-ad_files, white_list = config.read_config('config.json')
+if (getuid()):
+    print('You aren\'t root and you never will be :(')
+    exit(1)
 
-print(ad_files)
-print(white_list)
+BASE_DIR = path.dirname(__file__)
+CONFIG = path.join(BASE_DIR, 'config.json')
+DATABASE = path.join(BASE_DIR, 'adaway.db')
+
+database.insert_blacklisted_domains(DATABASE, CONFIG)
+database.export_database(DATABASE, CONFIG)
