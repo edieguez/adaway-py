@@ -1,19 +1,25 @@
 import json
 from os.path import exists
 
-def read_config(config_file):
+def read_config(config_file, *keys):
     if not exists(config_file):
         write_default_config(config_file)
 
-    blacklist = list()
-    whitelist = list()
+    data = None
 
     with open(config_file) as raw_config:
         json_file = json.load(raw_config)
-        blacklist = json_file['blacklist']
-        whitelist = json_file['whitelist']
 
-    return blacklist, whitelist
+        if len(keys) > 1:
+            data = list()
+
+            for key in keys:
+                data.append(json_file[key])
+        else:
+            data = json_file[keys[0]]
+
+
+    return data
 
 def write_default_config(filename):
     with open(filename, 'w') as config_file:
@@ -26,12 +32,12 @@ def write_default_config(filename):
                     "http://winhelp2002.mvps.org/hosts.txt",
                     "http://someonewhocares.org/hosts/hosts"
                 ],
-                "custom_host": {
+                "custom_hosts": {
                     "localhost": "127.0.0.1",
-                    "ip6-localhost ip6-loopback": "::1"
-                    "ip6-localnet": "fe00::0"
-                    "ip6-mcastprefix": "ff00::0"
-                    "ip6-allnodes": "ff02::1"
+                    "ip6-localhost ip6-loopback": "::1",
+                    "ip6-localnet": "fe00::0",
+                    "ip6-mcastprefix": "ff00::0",
+                    "ip6-allnodes": "ff02::1",
                     "ip6-allrouters": "ff02::2"
                 },
                 "whitelist": [

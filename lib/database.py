@@ -1,5 +1,9 @@
+import operator
 import sqlite3
 from os.path import exists
+
+from .config import read_config
+from .download import download_file
 
 
 def create_database(filename):
@@ -13,29 +17,41 @@ def create_database(filename):
         )
         cursor.execute(sql)
 
-def insert_blacklisted_domains(database, blacklist, whitelist=None):
+def insert_blacklisted_domains(database, config):
     if not exists(database):
         create_database(database)
 
     with sqlite3.connect(database) as connection:
         cursor = connection.cursor()
+        blacklist, whitelist = read_config(config, 'blacklist', 'whitelist')
 
-        for domain in blacklist:
-            if domain in whitelist:
-                continue
+        for file_ in blacklist:
+            data = download_file(file_)
 
-            try:
-                cursor.execute('INSERT INTO blacklist VALUES(NULL, ?)', (domain,))
-            except sqlite3.IntegrityError:
-                pass
+            for domain in data:
+                if domain in whitelist:
+                    continue
 
-def export_database(database, filename):
+                try:
+                    cursor.execute('INSERT INTO blacklist VALUES(NULL, ?)', (domain,))
+                except sqlite3.IntegrityError:
+                    pass
+
+def export_database(database, config, filename='/etc/hosts'):
     with sqlite3.connect(database) as connection:
         cursor = connection.cursor()
 
         with open(filename, 'w') as text_file:
+            custom_hosts = read_config(config, 'custom_hosts')
+            custom_hosts = sorted(custom_hosts.items(), key=operator.itemgetter(1))
+
+            for host, ip in custom_hosts:
+                text_file.write('%s\t%s\n' % (ip, host))
+
+            text_file.write('\n')
+
             hosts = cursor.execute('SELECT hostname FROM blacklist ORDER BY hostname')
             hosts = [host[0] for host in hosts]
 
             for host in hosts:
-                text_file.write('%s    %s\n' % ('0.0.0.0', host))
+                text_file.write('%s\t%s\n' % ('0.0.0.0', host))
