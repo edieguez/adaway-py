@@ -17,20 +17,27 @@ def read_config(config_file):
 
 def write_default_config(filename):
     with open(filename, 'w') as config_file:
-        raw_config = (
-            '{\n'
-            '    "blacklist": [\n'
-            '        "http://adaway.org/hosts.txt",\n'
-            '        "http://hosts-file.net/ad_servers.asp",\n'
-            '        "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext",\n'
-            '        "http://winhelp2002.mvps.org/hosts.txt",\n'
-            '        "http://someonewhocares.org/hosts/hosts"\n'
-            '    ],\n'
-            '    "whitelist": [\n'
-            '        "adf.ly",\n'
-            '        "localhost"\n'
-            '    ]\n'
-            '}'
-        )
+        raw_config = \
+            {
+                "blacklist": [
+                    "http://adaway.org/hosts.txt",
+                    "http://hosts-file.net/ad_servers.asp",
+                    "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext",
+                    "http://winhelp2002.mvps.org/hosts.txt",
+                    "http://someonewhocares.org/hosts/hosts"
+                ],
+                "custom_host": {
+                    "localhost": "127.0.0.1",
+                    "ip6-localhost ip6-loopback": "::1"
+                    "ip6-localnet": "fe00::0"
+                    "ip6-mcastprefix": "ff00::0"
+                    "ip6-allnodes": "ff02::1"
+                    "ip6-allrouters": "ff02::2"
+                },
+                "whitelist": [
+                    "adf.ly",
+                    "localhost"
+                ]
+            }
 
-        config_file.write(raw_config)
+        json.dump(raw_config, config_file, indent=4)

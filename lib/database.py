@@ -28,3 +28,14 @@ def insert_blacklisted_domains(database, blacklist, whitelist=None):
                 cursor.execute('INSERT INTO blacklist VALUES(NULL, ?)', (domain,))
             except sqlite3.IntegrityError:
                 pass
+
+def export_database(database, filename):
+    with sqlite3.connect(database) as connection:
+        cursor = connection.cursor()
+
+        with open(filename, 'w') as text_file:
+            hosts = cursor.execute('SELECT hostname FROM blacklist ORDER BY hostname')
+            hosts = [host[0] for host in hosts]
+
+            for host in hosts:
+                text_file.write('%s    %s\n' % ('0.0.0.0', host))

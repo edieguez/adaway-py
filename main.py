@@ -9,3 +9,5 @@ blacklist, whitelist = config.read_config(join(BASE_DIR, 'config.json'))
 for file_ in blacklist:
     data = download.download_file(file_)
     database.insert_blacklisted_domains('adaway.db', data, whitelist)
+
+database.export_database(join(BASE_DIR, 'adaway.db'), 'hosts.txt')
