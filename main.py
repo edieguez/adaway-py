@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
-from os import getuid
-from os import path
+from os import getuid, path
 from sys import exit
 
 from lib import config, database, download
