@@ -9,8 +9,6 @@ def download_file(wpath):
     regex = re.compile('^\d')
     domains = list()
 
-    print("downloading:", wpath)
-
     for domain in data:
         if domain and regex.match(domain):
             domains.append(domain.split()[1])

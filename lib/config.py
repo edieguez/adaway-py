@@ -2,9 +2,6 @@ import json
 from os.path import exists
 
 def read_config(config_file, *keys):
-    if not exists(config_file):
-        write_default_config(config_file)
-
     data = None
 
     with open(config_file) as raw_config:
