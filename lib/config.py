@@ -39,6 +39,7 @@ def write_default_config(filename):
                 },
                 "whitelist": [
                     "adf.ly",
+                    "www.linkbucks.com",
                     "localhost"
                 ]
             }

@@ -3,12 +3,17 @@ AdAway-py
 
 About
 ----
-**AdAway** is a python script to **block publicity**  using the system host file
+**AdAway-py** is a [python 3](https://www.python.org) script to **block publicity** using the system host file.
+It works only in linux (for now)
 
 How it works?
 ----
-It downloads files that contains the domains names
-and save them in the system host file
+In GNU/Linux distros exist a file in /etc/hosts
+(a.k.a. [host file](http://en.wikipedia.org/wiki/Hosts_(file))
+that contains domain names associated to an IP.
+This is a method to resolve hostnames without using a DNS server.
+Adaway-py download files that contains the hostnames of publicity servers and
+associate them with an non-existant IP
 
 What advantages does it have?
 ----
@@ -24,7 +29,7 @@ You can clone this repository using git
 git clone https://github.com/edieguez/adaway-py.git
 ```
 or
-[download](https://github.com/edieguez/adaway-py.git)
+[download](https://github.com/edieguez/adaway-py/archive/master.zip)
 it as a zip file
 
 How to use it?

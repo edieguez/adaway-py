@@ -6,15 +6,15 @@ from lib import config, database, download
 from lib.termcolor import Background, Font, Format, FormatPrinter
 
 
+writer = FormatPrinter()
+
 if (getuid()):
-    print('You aren\'t root and you never will be :(')
+    writer.write('You aren\'t root and you never will be :(', Font.RED)
     exit(1)
 
 BASE_DIR = path.dirname(__file__)
 CONFIG = path.join(BASE_DIR, 'config.json')
 DATABASE = path.join(BASE_DIR, 'adaway.db')
-
-writer = FormatPrinter()
 
 if not path.exists(CONFIG):
     writer.write('    [!] Creating default config file', Font.GREEN)
