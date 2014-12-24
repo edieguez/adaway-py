@@ -46,3 +46,11 @@ def export_database(database, custom_hosts, whitelist, filename='/etc/hosts'):
             for host in hosts:
                 if host not in whitelist:
                     text_file.write('%s\t%s\n' % ('0.0.0.0', host))
+
+def write_default_host_file(custom_hosts, filename='/etc/hosts'):
+    with open(filename, 'w') as text_file:
+        custom_hosts = sorted(custom_hosts.items(), key=operator.itemgetter(1))
+        custom_hosts.insert(0, [gethostname(), '127.0.0.1'])
+
+        for host, ip in custom_hosts:
+            text_file.write('%s\t%s\n' % (ip, host))
