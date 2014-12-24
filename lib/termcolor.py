@@ -2,35 +2,31 @@
 from enum import Enum, unique
 
 
-class FormatPrinter:
-    def write(self, message, *args, **kwargs):
-        '''Prints a formated message'''
+def write(message, *args, **kwargs):
+    '''Prints a formated message'''
 
-        formated_args = self.__format_args(*args)
+    formated_args = __format_args(*args)
 
-        print('[{}m{}[0m'.format(formated_args, message), **kwargs)
+    print('[{}m{}[0m'.format(formated_args, message), **kwargs)
 
-    def writef(self):
-        pass
+def __format_args(*args):
+    formated_args = '00'
 
-    def __format_args(self, *args):
-        formated_args = '00'
+    if args:
+        aux_list = list()
 
-        if args:
-            aux_list = list()
+        for arg in args:
+            if isinstance(arg, Enum):
+                arg = arg.value
 
-            for arg in args:
-                if isinstance(arg, Enum):
-                    arg = arg.value
+            if str(arg).isdigit():
+                aux_list.append(str(arg))
+            else:
+                raise ValueError('The format arguments must be numeric values')
 
-                if str(arg).isdigit():
-                    aux_list.append(str(arg))
-                else:
-                    raise ValueError('The format arguments must be numeric values')
+        formated_args = ';'.join(aux_list)
 
-            formated_args = ';'.join(aux_list)
-
-        return formated_args
+    return formated_args
 
 @unique
 class Format(Enum):
