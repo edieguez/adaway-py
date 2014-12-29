@@ -27,10 +27,7 @@ def insert_blacklisted_domains(database, blacklist):
             except sqlite3.IntegrityError:
                 pass
 
-def export_database(database, custom_hosts, whitelist, filename='/etc/hosts'):
-    with sqlite3.connect(database) as connection:
-        cursor = connection.cursor()
-
+def export_database(custom_hosts, whitelist=None, database=None, filename='/etc/hosts'):
         with open(filename, 'w') as text_file:
             custom_hosts = sorted(custom_hosts.items(), key=operator.itemgetter(1))
             custom_hosts.insert(0, [gethostname(), '127.0.0.1'])
@@ -38,19 +35,15 @@ def export_database(database, custom_hosts, whitelist, filename='/etc/hosts'):
             for host, ip in custom_hosts:
                 text_file.write('%s\t%s\n' % (ip, host))
 
-            text_file.write('\n')
+            if database:
+                with sqlite3.connect(database) as connection:
+                    cursor = connection.cursor()
 
-            hosts = cursor.execute('SELECT hostname FROM blacklist ORDER BY hostname')
-            hosts = [host[0] for host in hosts]
+                    text_file.write('\n')
 
-            for host in hosts:
-                if host not in whitelist:
-                    text_file.write('%s\t%s\n' % ('0.0.0.0', host))
+                    hosts = cursor.execute('SELECT hostname FROM blacklist ORDER BY hostname')
+                    hosts = [host[0] for host in hosts]
 
-def write_default_host_file(custom_hosts, filename='/etc/hosts'):
-    with open(filename, 'w') as text_file:
-        custom_hosts = sorted(custom_hosts.items(), key=operator.itemgetter(1))
-        custom_hosts.insert(0, [gethostname(), '127.0.0.1'])
-
-        for host, ip in custom_hosts:
-            text_file.write('%s\t%s\n' % (ip, host))
+                    for host in hosts:
+                        if host not in whitelist:
+                            text_file.write('%s\t%s\n' % ('0.0.0.0', host))

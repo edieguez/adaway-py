@@ -7,14 +7,16 @@ from lib import config, database, download
 from lib.termcolor import Background, Font, Format, write
 
 
-if (getuid()):
-    write('You aren\'t root and you never will be :(', Font.RED)
-    exit(1)
-
+# Argument parsing
 parser = ArgumentParser(description='A python3 script to block publicity')
 parser.add_argument('-d', action='store_true', help='Deactivate blocking')
 
 args = parser.parse_args()
+
+# Check if the user is root
+if (getuid()):
+    write('This script needs root provileges :(', Font.RED)
+    exit(1)
 
 # Basic variables
 BASE_DIR = path.dirname(__file__)
@@ -29,7 +31,7 @@ custom_hosts, whitelist = config.read_config(CONFIG, 'custom_hosts', 'whitelist'
 
 if args.d:
     write('    [!] Deactivating blocking', Font.GREEN)
-    database.write_default_host_file(custom_hosts)
+    database.export_database(custom_hosts)
 
     exit(0)
 
@@ -45,4 +47,4 @@ for file_ in blacklist_files:
     database.insert_blacklisted_domains(DATABASE, blacklist)
 
 write('    [!] Creating hosts file', Font.GREEN)
-database.export_database(DATABASE, custom_hosts, whitelist)
+database.export_database(custom_hosts, whitelist, DATABASE)
