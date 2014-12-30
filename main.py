@@ -9,7 +9,11 @@ from lib.termcolor import Background, Font, Format, write
 
 # Argument parsing
 parser = ArgumentParser(description='A python3 script to block publicity')
-parser.add_argument('-d', action='store_true', help='Deactivate blocking')
+group = parser.add_mutually_exclusive_group()
+
+group.add_argument('-a', action='store_true', help='apply blocking')
+group.add_argument('-d', action='store_true', help='deactivate blocking')
+group.add_argument('-u', action='store_true', help='update database')
 
 args = parser.parse_args()
 
@@ -39,12 +43,16 @@ if not path.exists(DATABASE):
     write('    [!] Creating database file', Font.GREEN)
     database.create_database(DATABASE)
 
-blacklist_files = config.read_config(CONFIG, 'blacklist')
+    args.a = False if args.a == True else True
 
-for file_ in blacklist_files:
-    write('    [!] Downloading %s' % file_, Font.GREEN)
-    blacklist = download.download_file(file_)
-    database.insert_blacklisted_domains(DATABASE, blacklist)
+if not args.a:
+    blacklist_files = config.read_config(CONFIG, 'blacklist')
 
-write('    [!] Creating hosts file', Font.GREEN)
-database.export_database(custom_hosts, whitelist, DATABASE)
+    for file_ in blacklist_files:
+        write('    [!] Downloading %s' % file_, Font.GREEN)
+        blacklist = download.download_file(file_)
+        database.insert_blacklisted_domains(DATABASE, blacklist)
+
+if not args.u:
+    write('    [!] Creating hosts file', Font.GREEN)
+    database.export_database(custom_hosts, whitelist, DATABASE)

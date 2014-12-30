@@ -1,10 +1,14 @@
 import re
+import socket
 from urllib import request
 
 
 def download_file(wpath):
-    data = request.urlopen(wpath).read()
-    data = data.decode('utf-8').split('\n')
+    try:
+        data = request.urlopen(wpath, timeout=5).read()
+        data = data.decode('utf-8').split('\n')
+    except socket.timeout:
+        return list()
 
     regex = re.compile('^\d')
     domains = list()

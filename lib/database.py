@@ -27,7 +27,7 @@ def insert_blacklisted_domains(database, blacklist):
             except sqlite3.IntegrityError:
                 pass
 
-def export_database(custom_hosts, whitelist=None, database=None, filename='/etc/hosts'):
+def export_database(custom_hosts, whitelist=list(), database=None, filename='/etc/hosts'):
         with open(filename, 'w') as text_file:
             custom_hosts = sorted(custom_hosts.items(), key=operator.itemgetter(1))
             custom_hosts.insert(0, [gethostname(), '127.0.0.1'])
