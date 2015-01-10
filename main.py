@@ -43,7 +43,7 @@ if not path.exists(DATABASE):
     write('    [!] Creating database file', Font.GREEN)
     database.create_database(DATABASE)
 
-    args.a = False if args.a == True else True
+    args.a = False
 
 if not args.a:
     blacklist_files = config.read_config(CONFIG, 'blacklist')

@@ -41,9 +41,9 @@ def export_database(custom_hosts, whitelist=list(), database=None, filename='/et
 
                     text_file.write('\n')
 
-                    hosts = cursor.execute('SELECT hostname FROM blacklist ORDER BY hostname')
-                    hosts = [host[0] for host in hosts]
+                    hosts = cursor.execute('SELECT hostname FROM blacklist')
+                    hosts = set([host[0] for host in hosts])
+                    hosts = sorted(hosts.difference(whitelist))
 
                     for host in hosts:
-                        if host not in whitelist:
-                            text_file.write('%s\t%s\n' % ('0.0.0.0', host))
+                        text_file.write('%s\t%s\n' % ('0.0.0.0', host))
