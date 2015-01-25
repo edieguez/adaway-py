@@ -18,20 +18,20 @@ def write():
     if os.path.exists(CONFIG):
         return
 
+    termcolor.write('    [!] Creating config file', termcolor.Font.GREEN)
+
     with open(CONFIG, 'w') as config_file:
         raw_config = {
             'host_files': [
                 'http://adaway.org/hosts.txt',
-                #'http://hosts-file.net/ad_servers.asp',
-                #'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext',
-                #'http://winhelp2002.mvps.org/hosts.txt',
-                #'http://someonewhocares.org/hosts/hosts'
+                'http://hosts-file.net/ad_servers.asp',
+                'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext',
+                'http://winhelp2002.mvps.org/hosts.txt',
+                'http://someonewhocares.org/hosts/hosts'
             ],
             'blacklist': [
-                'youtube.com'
             ],
             'custom_hosts': {
-                'saegusa': '128.0.0.1'
             },
             'whitelist': [
                 'adf.ly',

@@ -23,6 +23,15 @@ if (os.getuid()):
     sys.exit(1)
 
 config.write()
-database.create()
-database.populate()
-database.export()
+
+if args.d:
+    database.export(None, True)
+    sys.exit(0)
+
+args.a = database.create()
+
+if not args.a or args.u:
+    database.populate()
+
+if not args.u:
+    database.export()
