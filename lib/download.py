@@ -2,12 +2,16 @@ import re
 import socket
 from urllib import request
 
+import lib.termcolor as termcolor
 
-def download_file(wpath):
+
+def download_file(file):
+    termcolor.write('    [!] Downloading source file: %s' % file, termcolor.Font.GREEN)
     try:
-        data = request.urlopen(wpath, timeout=5).read()
+        data = request.urlopen(file, timeout=1).read()
         data = data.decode('utf-8').split('\n')
     except socket.timeout:
+        termcolor.write('    [!] Timeout, aborting', termcolor.Font.YELLOW)
         return list()
 
     regex = re.compile('^\d')
