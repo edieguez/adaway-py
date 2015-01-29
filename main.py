@@ -35,4 +35,4 @@ if not args.a or args.u:
     database.populate()
 
 if not args.u or args.a:
-    database.export(args.o)
+    database.export(args.filename)
