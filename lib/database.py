@@ -51,6 +51,7 @@ def export(filename=None, deactivate=False):
             blacklist = config.read('blacklist')
             custom_hosts = config.read('custom_hosts')
             whitelist = config.read('whitelist')
+            whitelist.append('localhost')
 
             if custom_hosts:
                 text_file.write('\n# Custom hosts\n')
