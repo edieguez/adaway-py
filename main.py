@@ -34,5 +34,5 @@ args.u = not database.create()
 if not args.a or args.u:
     database.populate()
 
-if not args.u or args.a:
+if not args.u or args.a or bool(len(sys.argv) == 1):
     database.export(args.filename)
