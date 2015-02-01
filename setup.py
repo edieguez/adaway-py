@@ -7,7 +7,7 @@ setup(
     author = 'Emmanuel Diéguez',
     author_email = 'dieguezemmanuel@gmail.com',
     url = 'https://github.com/edieguez/adaway-py', # use the URL to the github repo
-    download_url = 'https://github.com/peterldowns/mypackage/tarball/0.1', # I'll explain this in a second
+    download_url = 'https://github.com/edieguez/adaway-py/tarball/3.1', # I'll explain this in a second
     keywords = ['adaway', 'ad', 'adblock', 'blocking'], # arbitrary keywords
     classifiers = [],
 )
