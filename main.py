@@ -9,7 +9,7 @@ import lib.termcolor as termcolor
 
 # Argument parsing
 parser = ArgumentParser(description='A python3 script to block publicity')
-parser.add_argument('-o', help='output file')
+parser.add_argument('-o', dest='filename', help='output file')
 
 group = parser.add_mutually_exclusive_group()
 group.add_argument('-a', action='store_true', help='apply blocking')
@@ -34,5 +34,5 @@ args.u = not database.create()
 if not args.a or args.u:
     database.populate()
 
-if not args.u or args.a:
-    database.export(args.o)
+if not args.u or args.a or bool(len(sys.argv) == 1):
+    database.export(args.filename)

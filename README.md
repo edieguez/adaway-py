@@ -25,7 +25,7 @@ What advantages does it have?
 Download
 ----
 You can clone this repository using git
-```sh
+```
 git clone https://github.com/edieguez/adaway-py.git
 ```
 or
@@ -38,42 +38,51 @@ Just enter in the script directory and type
 ```sh
 sudo ./main.py
 ```
+
+You can use some flags to do some specific actions
+```
+Optional arguments:
+  -h, --help   show this help message and exit
+  -o FILENAME  output file
+  -a           apply blocking
+  -d           deactivate blocking
+  -u           update database
+```
+
 ![AdAway-py 1](https://cloud.githubusercontent.com/assets/8973425/5060497/06d66564-6d1f-11e4-9823-d06b036eb42f.png)
 ![AdAway-py 2](https://cloud.githubusercontent.com/assets/8973425/5060496/06d4f94a-6d1f-11e4-928f-38e2a870bfdd.png)
 
 Configuration
 ----
-The configuration file is generated in the first run and it is like this
+The configuration file is generated in the first run and it looks like this
 
 ```json
 {
-    "blacklist": [
+    "blacklist": [],
+    "custom_hosts": {},
+    "host_files": [
         "http://adaway.org/hosts.txt",
         "http://hosts-file.net/ad_servers.asp",
         "http://winhelp2002.mvps.org/hosts.txt",
         "http://someonewhocares.org/hosts/hosts"
     ],
-    "custom_hosts": {
-        "localhost": "127.0.0.1",
-        "ip6-localnet": "fe00::0",
-        "ip6-localhost ip6-loopback": "::1",
-        "ip6-allrouters": "ff02::2",
-        "ip6-allnodes": "ff02::1",
-        "ip6-mcastprefix": "ff00::0"
-    },
     "whitelist": [
         "adf.ly",
-        "localhost"
+        "www.linkbucks.com"
     ]
 }
 ```
 
-It contains only three sections
+It contains only four sections
 ### blacklist
-Contains all the source files to block ad domains
+A list of domains that the script will block. It allows you to include hosts that are
+not in the hosts files
 
 ### custom_host
 A dictionary that allows you to personalize your own hosts
 
+### host_files
+Contains all the source files to block ad domains
+
 ### whitelist
-A list of domains that the script won't block even if they are in one of the blacklist files
+A list of domains that the script won't block even if they are in one of the host files

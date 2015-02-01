@@ -8,7 +8,7 @@ import lib.termcolor as termcolor
 def download_file(file):
     termcolor.write('    [!] Downloading source file: %s' % file, termcolor.Font.GREEN)
     try:
-        data = request.urlopen(file, timeout=1).read()
+        data = request.urlopen(file, timeout=3).read()
         data = data.decode('utf-8').split('\n')
     except socket.timeout:
         termcolor.write('    [!] Timeout, aborting', termcolor.Font.YELLOW)
