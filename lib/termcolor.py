@@ -9,6 +9,7 @@ def write(message, *args, **kwargs):
 
     print('[{}m{}[0m'.format(formated_args, message), **kwargs)
 
+
 def __format_args(*args):
     formated_args = '00'
 
@@ -27,6 +28,7 @@ def __format_args(*args):
         formated_args = ';'.join(aux_list)
 
     return formated_args
+
 
 @unique
 class Format(Enum):

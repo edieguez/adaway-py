@@ -39,7 +39,7 @@ Just enter in the script directory and type
 sudo ./main.py
 ```
 
-You can use some flags to do some specific actions
+You can use some flags to do specific actions
 ```
 Optional arguments:
   -h, --help   show this help message and exit
@@ -58,8 +58,14 @@ The configuration file is generated in the first run and it looks like this
 
 ```json
 {
-    "blacklist": [],
-    "custom_hosts": {},
+    "blacklist": [
+      "www.nsa.gov",
+      "somenastydomain.com"
+    ],
+    "custom_hosts": {
+      "mydomain.com": "127.0.0.1",
+      "itanimulli.com": "50.63.202.25"
+    },
     "host_files": [
         "http://adaway.org/hosts.txt",
         "http://hosts-file.net/ad_servers.asp",
