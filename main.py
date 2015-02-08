@@ -1,4 +1,6 @@
 #! /usr/bin/env python3
+"""A python3 script to block publicity."""
+
 import os
 import sys
 from argparse import ArgumentParser
@@ -34,5 +36,5 @@ args.u = not database.create()
 if not args.a or args.u:
     database.populate()
 
-if not args.u or args.a or bool(len(sys.argv) == 1):
+if not args.u or args.a or not sys.argv[1:]:
     database.export(args.filename)

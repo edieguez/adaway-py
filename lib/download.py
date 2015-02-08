@@ -1,3 +1,5 @@
+"""Download a file from internet."""
+
 import re
 import socket
 from urllib import request
@@ -6,11 +8,11 @@ import lib.termcolor as termcolor
 
 
 def download_file(file):
-    '''Downloads a file from internet and saves it in a list.
+    """Download a file from internet and save it into a list.
 
     Keyword arguments:
     file --- the file that will be downloaded
-    '''
+    """
     termcolor.write('    [!] Downloading source file: %s' % file, termcolor.Font.GREEN)
     try:
         data = request.urlopen(file, timeout=3).read()

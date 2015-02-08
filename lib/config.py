@@ -1,3 +1,5 @@
+"""Manage the Adaway config file."""
+
 import json
 import os
 
@@ -10,11 +12,11 @@ DATABASE = os.path.join(__BASE_DIR, 'adaway.db')
 
 
 def read(key):
-    '''Reads a key from the config file.
+    """Read a key from the config file.
 
     Keyword arguments:
     key -- the key value to be readed
-    '''
+    """
     with open(CONFIG) as raw_config:
         json_file = json.load(raw_config)
 
@@ -22,7 +24,7 @@ def read(key):
 
 
 def write():
-    '''Creates the default config file if not exists.'''
+    """Create the default config file if not exists."""
     if os.path.exists(CONFIG):
         return
 
