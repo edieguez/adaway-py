@@ -10,6 +10,12 @@ __BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 CONFIG = os.path.join(__BASE_DIR, 'config.json')
 DATABASE = os.path.join(__BASE_DIR, 'adaway.db')
 
+if 'WINDIR' in os.environ:
+    FILENAME = os.path.join(
+        os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')
+else:
+    FILENAME = '/etc/hosts'
+
 
 def read(key):
     """Read a key from the config file.

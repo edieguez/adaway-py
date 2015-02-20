@@ -21,9 +21,10 @@ group.add_argument('-u', action='store_true', help='update database')
 args = parser.parse_args()
 
 # Check if the user is root
-if (os.getuid()):
-    termcolor.write('    [!] This script needs root provileges :(', termcolor.Font.RED)
-    sys.exit(1)
+# Discarted, no portable behavior (Does not run in Windows)
+#if (os.getuid()):
+#    termcolor.write('    [!] This script needs root provileges :(', termcolor.Font.RED)
+#    sys.exit(1)
 
 config.write()
 
