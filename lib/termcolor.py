@@ -2,6 +2,11 @@
 
 from enum import Enum, unique
 
+from lib.colorama.initialise import init
+
+
+init()
+
 
 def write(message, *args, **kwargs):
     """Print a formated message."""
