@@ -1,3 +1,5 @@
+"""Manage the Adaway config file."""
+
 import json
 import os
 
@@ -8,13 +10,19 @@ __BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 CONFIG = os.path.join(__BASE_DIR, 'config.json')
 DATABASE = os.path.join(__BASE_DIR, 'adaway.db')
 
+if 'WINDIR' in os.environ:
+    FILENAME = os.path.join(
+        os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')
+else:
+    FILENAME = '/etc/hosts'
+
 
 def read(key):
-    '''Reads a key from the config file.
+    """Read a key from the config file.
 
     Keyword arguments:
     key -- the key value to be readed
-    '''
+    """
     with open(CONFIG) as raw_config:
         json_file = json.load(raw_config)
 
@@ -22,7 +30,7 @@ def read(key):
 
 
 def write():
-    '''Creates the default config file if not exists.'''
+    """Create the default config file if not exists."""
     if os.path.exists(CONFIG):
         return
 

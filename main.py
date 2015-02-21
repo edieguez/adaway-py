@@ -1,4 +1,6 @@
 #! /usr/bin/env python3
+"""A python3 script to block publicity."""
+
 import os
 import sys
 from argparse import ArgumentParser
@@ -19,9 +21,10 @@ group.add_argument('-u', action='store_true', help='update database')
 args = parser.parse_args()
 
 # Check if the user is root
-if (os.getuid()):
-    termcolor.write('    [!] This script needs root provileges :(', termcolor.Font.RED)
-    sys.exit(1)
+# Discarted, no portable behavior (Does not run in Windows)
+#if (os.getuid()):
+#    termcolor.write('    [!] This script needs root provileges :(', termcolor.Font.RED)
+#    sys.exit(1)
 
 config.write()
 
@@ -34,5 +37,5 @@ args.u = not database.create()
 if not args.a or args.u:
     database.populate()
 
-if not args.u or args.a or bool(len(sys.argv) == 1):
+if not args.u or args.a or not sys.argv[1:]:
     database.export(args.filename)

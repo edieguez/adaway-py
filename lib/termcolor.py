@@ -1,10 +1,10 @@
-#! /usr/bin/env python3
+"""A simple class to print in colors."""
+
 from enum import Enum, unique
 
 
 def write(message, *args, **kwargs):
-    '''Prints a formated message'''
-
+    """Print a formated message."""
     formated_args = __format_args(*args)
 
     print('[{}m{}[0m'.format(formated_args, message), **kwargs)
@@ -32,6 +32,9 @@ def __format_args(*args):
 
 @unique
 class Format(Enum):
+
+    """Enum containing the format numeric codes."""
+
     BOLD = '01'
     ITALIC = '03'
     UNDER = '04'
@@ -41,6 +44,9 @@ class Format(Enum):
 
 @unique
 class Font(Enum):
+
+    """Enum containing the font numeric codes."""
+
     BLACK = 30
     RED = 31
     GREEN = 32
@@ -54,6 +60,9 @@ class Font(Enum):
 
 @unique
 class Background(Enum):
+
+    """Enum containing the background numeric codes."""
+
     BLACK = 40
     RED = 41
     GREEN = 42
