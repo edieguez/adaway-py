@@ -15,7 +15,7 @@ class Config:
 
     def __init__(self):
         """Create a new config object."""
-        self.__BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+        self.__BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         self.CONFIG = os.path.join(self.__BASE_DIR, 'config.json')
         self.DATABASE = os.path.join(self.__BASE_DIR, 'adaway.db')
         self.FILENAME = self.get_filename()
