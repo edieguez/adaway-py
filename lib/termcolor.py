@@ -12,13 +12,13 @@ class Termcolor:
 
     """An object to print using color in the terminal."""
 
-    def write(message, *args, **kwargs):
+    def write(self, message, *args, **kwargs):
         """Print a formated message."""
-        formated_args = __format_args(*args)
+        formated_args = self.__format_args(*args)
 
         print('[{}m{}[0m'.format(formated_args, message), **kwargs)
 
-    def __format_args(*args):
+    def __format_args(self, *args):
         formated_args = '00'
 
         if args:

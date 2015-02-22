@@ -4,21 +4,23 @@ import json
 import os
 import sys
 
-import lib.termcolor as termcolor
+from lib.termcolor import Termcolor, Font
+
+termcolor = Termcolor()
 
 
 class Config:
 
     """An object to manage the AdAway configuration variables."""
 
-    def __init__():
+    def __init__(self):
         """Create a new config object."""
         self.__BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-        CONFIG = os.path.join(__BASE_DIR, 'config.json')
-        DATABASE = os.path.join(__BASE_DIR, 'adaway.db')
-        FILENAME = get_filename()
+        self.CONFIG = os.path.join(self.__BASE_DIR, 'config.json')
+        self.DATABASE = os.path.join(self.__BASE_DIR, 'adaway.db')
+        self.FILENAME = self.get_filename()
 
-    def get_filename():
+    def get_filename(self):
         """Get the hosts file name for Linux or Windows."""
         if 'WINDIR' in os.environ:
             FILENAME = os.path.join(
@@ -28,7 +30,7 @@ class Config:
 
         return FILENAME
 
-    def read(key):
+    def read(self, key):
         """Read a key from the config file.
 
         Keyword arguments:
@@ -39,14 +41,14 @@ class Config:
 
             return json_file[key]
 
-    def write():
+    def write(self):
         """Create the default config file if not exists."""
-        if os.path.exists(CONFIG):
+        if os.path.exists(self.CONFIG):
             return
 
-        termcolor.write('    [!] Creating config file', termcolor.Font.GREEN)
+        termcolor.write('    [!] Creating config file', Font.GREEN)
 
-        with open(CONFIG, 'w') as config_file:
+        with open(self.CONFIG, 'w') as config_file:
             raw_config = {
                 'host_files': [
                     'http://adaway.org/hosts.txt',
