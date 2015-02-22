@@ -22,7 +22,7 @@ def download_file(file_):
         data = request.urlopen(file_, timeout=3).read()
         data = data.decode('utf-8').split('\n')
     except socket.timeout:
-        termcolor.write('[!] Timeout, aborting', termcolor.Font.YELLOW)
+        termcolor.write('[!] Timeout, aborting', Font.YELLOW)
         return list()
     except URLError:
         termcolor.write('[!] Network error: You don\'t have an internet connection', Font.RED)
