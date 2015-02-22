@@ -16,7 +16,7 @@ class Termcolor:
         """Print a formated message."""
         formated_args = self.__format_args(*args)
 
-        print('[{}m{}[0m'.format(formated_args, message), **kwargs)
+        print('[{}m  {}[0m'.format(formated_args, message), **kwargs)
 
     def __format_args(self, *args):
         formated_args = '00'

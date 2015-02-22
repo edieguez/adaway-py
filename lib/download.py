@@ -17,15 +17,15 @@ def download_file(file_):
     Keyword arguments:
     file_ --- the file that will be downloaded
     """
-    termcolor.write('    [!] Downloading source file: %s' % file_, Font.GREEN)
+    termcolor.write('[!] Downloading source file: %s' % file_, Font.GREEN)
     try:
         data = request.urlopen(file_, timeout=3).read()
         data = data.decode('utf-8').split('\n')
     except socket.timeout:
-        termcolor.write('    [!] Timeout, aborting', termcolor.Font.YELLOW)
+        termcolor.write('[!] Timeout, aborting', termcolor.Font.YELLOW)
         return list()
     except URLError:
-        termcolor.write('    [!] Network error: You don\'t have an internet connection', Font.RED)
+        termcolor.write('[!] Network error: You don\'t have an internet connection', Font.RED)
         sys.exit(2)
 
     regex = re.compile('^\d')

@@ -24,18 +24,15 @@ config = Config()
 config.write()
 
 database = Database()
-database.create()
-database.populate()
-database.export()
 
-#if args.d:
-#    database.export(None, True)
-#    sys.exit(0)
-#
-#args.u = not database.create()
-#
-#if not args.a or args.u:
-#    database.populate()
-#
-#if not args.u or args.a or not sys.argv[1:]:
-#    database.export(args.filename)
+if args.d:
+    database.export(None, True)
+    sys.exit(0)
+
+args.u = not database.create()
+
+if not args.a or args.u:
+    database.populate()
+
+if not args.u or args.a or not sys.argv[1:]:
+    database.export(args.filename)

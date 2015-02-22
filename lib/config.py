@@ -46,7 +46,7 @@ class Config:
         if os.path.exists(self.CONFIG):
             return
 
-        termcolor.write('    [!] Creating config file', Font.GREEN)
+        termcolor.write('[!] Creating config file', Font.GREEN)
 
         with open(self.CONFIG, 'w') as config_file:
             raw_config = {
