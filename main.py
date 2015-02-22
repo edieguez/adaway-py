@@ -5,9 +5,9 @@ import os
 import sys
 from argparse import ArgumentParser
 
-import lib.config as config
-import lib.database as database
-import lib.termcolor as termcolor
+from lib.config import Config
+from lib.database import Database
+from lib.termcolor import Termcolor
 
 # Argument parsing
 parser = ArgumentParser(description='A python3 script to block publicity')
@@ -20,13 +20,10 @@ group.add_argument('-u', action='store_true', help='update database')
 
 args = parser.parse_args()
 
-# Check if the user is root
-# Discarted, no portable behavior (Does not run in Windows)
-#if (os.getuid()):
-#    termcolor.write('    [!] This script needs root provileges :(', termcolor.Font.RED)
-#    sys.exit(1)
-
+config = Config()
 config.write()
+
+database = Database()
 
 if args.d:
     database.export(None, True)
