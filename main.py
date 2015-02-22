@@ -23,6 +23,11 @@ args = parser.parse_args()
 config = Config()
 config.write()
 
+database = Database()
+database.create()
+database.populate()
+database.export()
+
 #if args.d:
 #    database.export(None, True)
 #    sys.exit(0)

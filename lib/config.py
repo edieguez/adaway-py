@@ -36,7 +36,7 @@ class Config:
         Keyword arguments:
         key -- the key value to be readed
         """
-        with open(CONFIG) as raw_config:
+        with open(self.CONFIG) as raw_config:
             json_file = json.load(raw_config)
 
             return json_file[key]
