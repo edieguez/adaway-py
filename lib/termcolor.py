@@ -8,31 +8,34 @@ from lib.colorama.initialise import init
 init()
 
 
-def write(message, *args, **kwargs):
-    """Print a formated message."""
-    formated_args = __format_args(*args)
+class Termcolor:
 
-    print('[{}m{}[0m'.format(formated_args, message), **kwargs)
+    """An object to print using color in the terminal."""
 
+    def write(message, *args, **kwargs):
+        """Print a formated message."""
+        formated_args = __format_args(*args)
 
-def __format_args(*args):
-    formated_args = '00'
+        print('[{}m{}[0m'.format(formated_args, message), **kwargs)
 
-    if args:
-        aux_list = list()
+    def __format_args(*args):
+        formated_args = '00'
 
-        for arg in args:
-            if isinstance(arg, Enum):
-                arg = arg.value
+        if args:
+            aux_list = list()
 
-            if str(arg).isdigit():
-                aux_list.append(str(arg))
-            else:
-                raise ValueError('The format arguments must be numeric values')
+            for arg in args:
+                if isinstance(arg, Enum):
+                    arg = arg.value
 
-        formated_args = ';'.join(aux_list)
+                if str(arg).isdigit():
+                    aux_list.append(str(arg))
+                else:
+                    raise ValueError('The format arguments must be numeric values')
 
-    return formated_args
+            formated_args = ';'.join(aux_list)
+
+        return formated_args
 
 
 @unique
