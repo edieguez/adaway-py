@@ -3,8 +3,15 @@
 import re
 import socket
 import sys
-from urllib import request
-from urllib.error import URLError
+
+try:
+    # Python3
+    from urllib import request
+    from urllib.error import URLError
+except ImportError:
+    # Python2
+    import urllib2 as request
+    from urllib2 import URLError
 
 from lib.termcolor import Termcolor, Font
 

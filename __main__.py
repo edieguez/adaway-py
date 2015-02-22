@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
 """A python3 script to block publicity."""
 
 import os
