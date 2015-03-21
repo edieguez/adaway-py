@@ -5,11 +5,10 @@ import os
 import sqlite3
 from socket import gethostname
 
-from lib.config import Config
+from lib import config
 from lib.termcolor import Termcolor, Font
 from lib.download import download_file
 
-config = Config()
 termcolor = Termcolor()
 
 

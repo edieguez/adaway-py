@@ -5,7 +5,7 @@ import os
 import sys
 from argparse import ArgumentParser
 
-from lib.config import Config
+from lib import config
 from lib.database import Database
 from lib.termcolor import Termcolor
 
@@ -20,7 +20,6 @@ group.add_argument('-u', action='store_true', help='update database')
 
 args = parser.parse_args()
 
-config = Config()
 config.write()
 
 database = Database()
