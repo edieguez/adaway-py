@@ -20,6 +20,10 @@ group.add_argument('-u', action='store_true', help='update database')
 
 args = parser.parse_args()
 
+if args.filename:
+    config.FILENAME = args.filename
+
+config.validate_files()
 config.write()
 
 database = Database()
@@ -34,4 +38,4 @@ if not args.a or args.u:
     database.populate()
 
 if not args.u or args.a or not sys.argv[1:]:
-    database.export(args.filename)
+    database.export()

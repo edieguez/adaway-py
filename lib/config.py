@@ -5,6 +5,7 @@ import os
 import sys
 
 from lib.termcolor import Termcolor, Font
+from lib.validator import validate_write_permission
 
 termcolor = Termcolor()
 
@@ -61,7 +62,28 @@ def write():
         json.dump(raw_config, config_file, indent=4)
 
 
-termcolor.write("Importando el modulo de configuracion", Font.CYAN)
+def validate_files():
+    """Check write permission."""
+    outputfile = sys.modules[__name__].FILENAME
+
+    if not os.path.exists(CONFIG):
+        files.insert(0, CONFIG)
+
+    if os.path.isdir(outputfile):
+        outputfile += '/hosts.txt'
+        sys.modules[__name__].FILENAME = outputfile
+
+    files = [
+        DATABASE,
+        outputfile
+    ]
+
+    for file_ in files:
+        if not validate_write_permission(file_):
+            termcolor.write('[!] You can\'t write in %s' % file_, Font.RED)
+            sys.exit(3)
+
+
 __BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 CONFIG = os.path.join(__BASE_DIR, 'config.json')
 DATABASE = os.path.join(__BASE_DIR, 'adaway.db')
