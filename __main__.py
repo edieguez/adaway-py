@@ -1,9 +1,10 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 """A python3 script to block publicity."""
 
 from argparse import ArgumentParser
 
 # Argument parsing
+from lib.config import Config
 from lib.database import Database
 
 parser = ArgumentParser(description='A python3 script to block publicity')
@@ -16,5 +17,10 @@ group.add_argument('-u', action='store_true', help='update database')
 
 args = parser.parse_args()
 
-singleton = Database()
-singleton.create()
+config = Config()
+config.create()
+
+database = Database()
+database.create()
+database.populate()
+database.export()

@@ -9,7 +9,7 @@ class Config:
 
     def __new__(cls):
         if not Config.instance:
-            Config.instance = Config.__config()
+            Config.instance = Config.__Config()
 
         return Config.instance
 
@@ -19,7 +19,7 @@ class Config:
     def __setattr__(self, key, value):
         return setattr(self.instance, key, value)
 
-    class __config:
+    class __Config:
         def __init__(self):
             self.__BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
             self.config = os.path.join(self.__BASE_DIR, 'config.json')
@@ -46,9 +46,9 @@ class Config:
 
                 return json_file[key]
 
-        def write(self):
+        def create(self):
             """Create the default config file if not exists."""
-            if os.path.exists(Config):
+            if os.path.exists(self.config):
                 return
 
             with open(self.config, 'w') as config_file:
