@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 
 from lib import config
 from lib.database import Database
-from lib.termcolor import Termcolor
+from lib.termcolor import Termcolor, Font, Format, Background
 
 # Argument parsing
 parser = ArgumentParser(description='A python3 script to block publicity')
@@ -20,22 +20,4 @@ group.add_argument('-u', action='store_true', help='update database')
 
 args = parser.parse_args()
 
-if args.filename:
-    config.FILENAME = args.filename
-
-config.validate_files()
-config.write()
-
-database = Database()
-
-if args.d:
-    database.export(None, True)
-    sys.exit(0)
-
-args.u = not database.create()
-
-if not args.a or args.u:
-    database.populate()
-
-if not args.u or args.a or not sys.argv[1:]:
-    database.export()
+Termcolor.write("Message", Font.CYAN, Format.BLINK, Background.GREEN)
