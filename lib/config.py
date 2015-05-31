@@ -4,7 +4,7 @@ import json
 import os
 
 
-class Config():
+class Config:
     instance = None
 
     def __new__(cls):

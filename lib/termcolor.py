@@ -2,12 +2,10 @@
 
 from lib.colorama.initialise import init
 
-
 init()
 
 
 class Termcolor:
-
     """An object to print using color in the terminal."""
 
     @classmethod
@@ -15,9 +13,6 @@ class Termcolor:
         """Print a formated message."""
         formated_args = cls.__format_args(*args)
 
-        print(cls)
-        print(message)
-        print(formated_args)
         print('[{}m{}[0m'.format(formated_args, message))
 
     @staticmethod
@@ -30,8 +25,7 @@ class Termcolor:
         return formated_args
 
 
-class Format():
-
+class Format:
     """Enum containing the format numeric codes."""
 
     BOLD = '01'
@@ -41,8 +35,7 @@ class Format():
     REVERSE = '07'
 
 
-class Font():
-
+class Font:
     """Enum containing the font numeric codes."""
 
     BLACK = "30"
@@ -56,8 +49,7 @@ class Font():
     WHITE = "38"
 
 
-class Background():
-
+class Background:
     """Enum containing the background numeric codes."""
 
     BLACK = "40"
