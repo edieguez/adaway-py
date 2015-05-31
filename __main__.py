@@ -5,11 +5,9 @@ import os
 import sys
 from argparse import ArgumentParser
 
-from lib import config
-from lib.database import Database
-from lib.termcolor import Termcolor, Font, Format, Background
-
 # Argument parsing
+from lib.config import Config
+
 parser = ArgumentParser(description='A python3 script to block publicity')
 parser.add_argument('-o', dest='filename', help='output file')
 
@@ -20,4 +18,5 @@ group.add_argument('-u', action='store_true', help='update database')
 
 args = parser.parse_args()
 
-Termcolor.write("Message", Font.CYAN, Format.BLINK, Background.GREEN)
+singleton = Config()
+print(singleton.filename)

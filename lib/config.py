@@ -2,89 +2,72 @@
 
 import json
 import os
-import sys
-
-from lib.termcolor import Termcolor, Font
-from lib.validator import validate_write_permission
-
-termcolor = Termcolor()
 
 
-def get_filename():
-    """Get the hosts file name for Linux or Windows."""
-    if 'WINDIR' in os.environ:
-        FILENAME = os.path.join(
-            os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')
-    else:
-        FILENAME = '/etc/hosts'
+class Config():
+    instance = None
 
-    return FILENAME
+    def __new__(cls):
+        if not Config.instance:
+            Config.instance = Config.__config()
 
+        return Config.instance
 
-def read(key):
-    """Read a key from the config file.
+    def __getattr__(self, item):
+        return getattr(self.instance, item)
 
-    Keyword arguments:
-    key -- the key value to be readed
-    """
-    with open(CONFIG) as raw_config:
-        json_file = json.load(raw_config)
+    def __setattr__(self, key, value):
+        return setattr(self.instance, key, value)
 
-        return json_file[key]
+    class __config:
+        def __init__(self):
+            self.__BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            self.config = os.path.join(self.__BASE_DIR, 'config.json')
+            self.database = os.path.join(self.__BASE_DIR, 'adaway.db')
 
+        @property
+        def filename(self):
+            if 'WINDIR' in os.environ:
+                filename = os.path.join(
+                    os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')
+            else:
+                filename = '/etc/hosts'
 
-def write():
-    """Create the default config file if not exists."""
-    if os.path.exists(CONFIG):
-        return
+            return filename
 
-    termcolor.write('[!] Creating config file', Font.GREEN)
+        def read(self, key):
+            """Read a key from the config file.
+        
+            Keyword arguments:
+            key -- the key value to be readed
+            """
+            with open(self.config) as raw_config:
+                json_file = json.load(raw_config)
 
-    with open(CONFIG, 'w') as config_file:
-        raw_config = {
-            'host_files': [
-                'http://adaway.org/hosts.txt',
-                'http://hosts-file.net/ad_servers.asp',
-                'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext',
-                'http://winhelp2002.mvps.org/hosts.txt',
-                'http://someonewhocares.org/hosts/hosts'
-            ],
-            'blacklist': [
-            ],
-            'custom_hosts': {
-            },
-            'whitelist': [
-                'adf.ly',
-                'www.linkbucks.com'
-            ]
-        }
+                return json_file[key]
 
-        json.dump(raw_config, config_file, indent=4)
+        def write(self):
+            """Create the default config file if not exists."""
+            if os.path.exists(Config):
+                return
 
+            with open(self.config, 'w') as config_file:
+                raw_config = {
+                    'host_files': [
+                        'http://adaway.org/hosts.txt',
+                        'http://hosts-file.net/ad_servers.asp',
+                        'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext',
+                        'http://winhelp2002.mvps.org/hosts.txt',
+                        'http://someonewhocares.org/hosts/hosts'
+                    ],
+                    'blacklist': [
+                    ],
+                    'custom_hosts': {
+                    },
+                    'whitelist': [
+                        'adf.ly',
+                        'www.linkbucks.com'
+                    ]
+                }
 
-def validate_files():
-    """Check write permission."""
-    outputfile = sys.modules[__name__].FILENAME
-
-    if not os.path.exists(CONFIG):
-        files.insert(0, CONFIG)
-
-    if os.path.isdir(outputfile):
-        outputfile += '/hosts.txt'
-        sys.modules[__name__].FILENAME = outputfile
-
-    files = [
-        DATABASE,
-        outputfile
-    ]
-
-    for file_ in files:
-        if not validate_write_permission(file_):
-            termcolor.write('[!] You can\'t write in %s' % file_, Font.RED)
-            sys.exit(3)
-
-
-__BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-CONFIG = os.path.join(__BASE_DIR, 'config.json')
-DATABASE = os.path.join(__BASE_DIR, 'adaway.db')
-FILENAME = get_filename()
+                json.dump(raw_config, config_file, indent=4)
