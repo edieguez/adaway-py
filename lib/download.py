@@ -1,8 +1,9 @@
 """Download a file from internet."""
 
-import re
 import socket
 import sys
+
+import re
 
 try:
     # Python3
@@ -15,8 +16,6 @@ except ImportError:
 
 from lib.termcolor import Termcolor, Font
 
-termcolor = Termcolor()
-
 
 def download_file(file_):
     """Download a file from internet and save it into a list.
@@ -24,15 +23,15 @@ def download_file(file_):
     Keyword arguments:
     file_ --- the file that will be downloaded
     """
-    termcolor.write('[!] Downloading source file: %s' % file_, Font.GREEN)
+    Termcolor.write('[!] Downloading source file: %s' % file_, Font.GREEN)
     try:
         data = request.urlopen(file_, timeout=3).read()
         data = data.decode('utf-8').split('\n')
     except socket.timeout:
-        termcolor.write('[!] Timeout, aborting', Font.YELLOW)
+        Termcolor.write('[!] Timeout, aborting', Font.YELLOW)
         return list()
     except URLError:
-        termcolor.write('[!] Network error: You don\'t have an internet connection', Font.RED)
+        Termcolor.write('[!] Network error: You don\'t have an internet connection', Font.RED)
         sys.exit(2)
 
     regex = re.compile('^\d')
