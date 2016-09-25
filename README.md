@@ -31,7 +31,7 @@ git clone https://github.com/edieguez/adaway-py.git
 ```
 [download](https://github.com/edieguez/adaway-py/archive/master.zip)
 it as a zip file
-or even download a [compressed version](https://mega.nz/#!WYxxyJ5b!ZzcM902KFW-2hJ9Nu6G291pjxkdrwmdmZVOwN70PFQ8)
+or even download a [compressed version](https://github.com/edieguez/adaway-py/blob/master/adaway.py?raw=true)
 (this is the recommended way if you only want to use the script)
 
 How to use it?
