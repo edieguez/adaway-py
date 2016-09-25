@@ -21,7 +21,7 @@ class Config:
         self.FILENAME = self.get_filename()
 
     def get_filename(self):
-        """Get the hosts file name for Linux or Windows."""
+        """Get the hosts file name for Linux/Mac OS or Windows."""
         if 'WINDIR' in os.environ:
             FILENAME = os.path.join(
                 os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')

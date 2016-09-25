@@ -25,17 +25,18 @@ def download_file(file_):
     file_ --- the file that will be downloaded
     """
     termcolor.write('[!] Downloading source file: %s' % file_, Font.GREEN)
+
     try:
         data = request.urlopen(file_, timeout=3).read()
         data = data.decode('utf-8').split('\n')
     except socket.timeout:
         termcolor.write('[!] Timeout, aborting', Font.YELLOW)
         return list()
-    except URLError:
-        termcolor.write('[!] Network error: You don\'t have an internet connection', Font.RED)
-        sys.exit(2)
+    except URLError as ex:
+        termcolor.write('[!] ' + str(ex), Font.RED)
+        return list()
 
-    regex = re.compile('^\d')
+    regex = re.compile('^(?:[0-9]{1,3}\.){3}[0-9]{1,3} [^\s]+')
     domains = list()
 
     for domain in data:
