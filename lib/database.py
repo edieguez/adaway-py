@@ -101,6 +101,9 @@ class Database:
                         hosts = sorted(hosts.difference(whitelist))
 
                         for host in hosts:
-                            text_file.write('%s\t%s\n' % ('0.0.0.0', host))
+                            try:
+                                text_file.write('%s\t%s\n' % ('0.0.0.0', host))
+                            except UnicodeEncodeError as ex:
+                                termcolor.write('[!] ' + str(ex), Font.RED)
                 else:
                     termcolor.write('[!] Host blocking deactivated', Font.GREEN)
