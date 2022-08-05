@@ -5,7 +5,7 @@ import sys
 from argparse import ArgumentParser
 
 from lib.config import Config
-from lib.database import Database
+from lib import database
 
 # Argument parsing
 parser = ArgumentParser(description='A python3 script to block publicity')
@@ -20,8 +20,6 @@ args = parser.parse_args()
 
 config = Config()
 config.write()
-
-database = Database()
 
 if args.d:
     database.export(None, True)

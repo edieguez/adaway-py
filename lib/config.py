@@ -18,7 +18,8 @@ class Config:
         self.DATABASE = os.path.join(self.__BASE_DIR, 'adaway.db')
         self.FILENAME = self.get_filename()
 
-    def get_filename(self):
+    @staticmethod
+    def get_filename():
         """Get the hosts file name for Linux/Mac OS or Windows."""
         if 'WINDIR' in os.environ:
             FILENAME = os.path.join(
