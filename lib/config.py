@@ -3,7 +3,7 @@
 import json
 import os
 
-from lib.termcolor import Termcolor, Font
+from lib.termcolor import Termcolor
 
 termcolor = Termcolor()
 
@@ -45,7 +45,7 @@ class Config:
         if os.path.exists(self.CONFIG):
             return
 
-        termcolor.write('[!] Creating config file', Font.GREEN)
+        termcolor.info('Creating config file')
 
         with open(self.CONFIG, 'w') as config_file:
             raw_config = {

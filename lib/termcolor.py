@@ -1,65 +1,26 @@
 """A simple class to print in colors."""
 
-from colorama.initialise import init
-
-
-init()
+from colorama import init, Fore, Style
 
 
 class Termcolor:
 
     """An object to print using color in the terminal."""
 
-    def write(self, message, *args):
-        """Print a formated message."""
-        formated_args = self.__format_args(*args)
+    def __init__(self):
+        init()
 
-        print('[{}m  {}[0m'.format(formated_args, message))
+    def info(self, message):
+        self.__write(f'[i] {message}', Fore.BLUE)
 
-    def __format_args(self, *args):
-        formated_args = '00'
+    def warn(self, message):
+        self.__write(f'[w] {message}', Fore.YELLOW)
 
-        if args:
-            formated_args = ';'.join(args)
+    def error(self, message):
+        self.__write(f'[e] {message}', Fore.RED)
 
-        return formated_args
+    def __write(self, message, format):
 
+        """Print a formatted message."""
 
-class Format():
-
-    """Enum containing the format numeric codes."""
-
-    BOLD = '01'
-    ITALIC = '03'
-    UNDER = '04'
-    BLINK = '05'
-    REVERSE = '07'
-
-
-class Font():
-
-    """Enum containing the font numeric codes."""
-
-    BLACK = "30"
-    RED = "31"
-    GREEN = "32"
-    YELLOW = "33"
-    BLUE = "34"
-    PURPLE = "35"
-    CYAN = "36"
-    GRAY = "37"
-    WHITE = "38"
-
-
-class Background():
-
-    """Enum containing the background numeric codes."""
-
-    BLACK = "40"
-    RED = "41"
-    GREEN = "42"
-    YELLOW = "43"
-    BLUE = "44"
-    PURPLE = "45"
-    CYAN = "46"
-    GRAY = "47"
+        print(f'  {format}{message}{Style.RESET_ALL}')

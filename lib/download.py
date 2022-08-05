@@ -12,7 +12,7 @@ except ImportError:
     import urllib2 as request
     from urllib2 import URLError
 
-from lib.termcolor import Termcolor, Font
+from lib.termcolor import Termcolor
 
 termcolor = Termcolor()
 
@@ -23,16 +23,16 @@ def download_file(file_):
     Keyword arguments:
     file_ --- the file that will be downloaded
     """
-    termcolor.write('[!] Downloading source file: %s' % file_, Font.GREEN)
+    termcolor.info(f'Downloading source file: {file_}')
 
     try:
         data = request.urlopen(file_, timeout=3).read()
         data = data.decode('utf-8').split('\n')
     except socket.timeout:
-        termcolor.write('[!] Timeout, aborting', Font.YELLOW)
+        termcolor.warn('Timeout, aborting')
         return list()
     except URLError as ex:
-        termcolor.write('[!] ' + str(ex), Font.RED)
+        termcolor.error(f'{file_} - {str(ex)}')
         return list()
 
     regex = re.compile('^(?:[0-9]{1,3}\.){3}[0-9]{1,3} [^\s]+')
