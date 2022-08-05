@@ -1,6 +1,6 @@
 """A simple class to print in colors."""
 
-from lib.colorama.initialise import init
+from colorama.initialise import init
 
 
 init()

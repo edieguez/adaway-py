@@ -2,7 +2,6 @@
 
 import re
 import socket
-import sys
 
 try:
     # Python3

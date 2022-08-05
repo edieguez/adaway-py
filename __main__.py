@@ -1,13 +1,11 @@
 #! /usr/bin/env python
 """A python3 script to block publicity."""
 
-import os
 import sys
 from argparse import ArgumentParser
 
 from lib.config import Config
 from lib.database import Database
-from lib.termcolor import Termcolor
 
 # Argument parsing
 parser = ArgumentParser(description='A python3 script to block publicity')
