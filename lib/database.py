@@ -103,6 +103,6 @@ class Database:
                         try:
                             text_file.write('%s\t%s\n' % ('0.0.0.0', host))
                         except UnicodeEncodeError as ex:
-                            termcolor.write('' + str(ex), 'Font.RED')
+                            termcolor.error(str(ex))
             else:
                 termcolor.info('Host blocking deactivated')
