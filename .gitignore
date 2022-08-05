@@ -56,3 +56,10 @@ target/
 *.db
 *.json
 .DS_Store
+
+.idea/inspectionProfiles
+.idea/adaway-py.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea
