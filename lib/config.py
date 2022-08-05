@@ -9,7 +9,6 @@ termcolor = Termcolor()
 
 
 class Config:
-
     """An object to manage the AdAway configuration variables."""
 
     def __init__(self):

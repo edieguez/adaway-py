@@ -18,6 +18,7 @@ associate them with an non-existant IP
 
 What advantages does it have?
 ----
+
 * Can block publicity domains or any other
 * You don't need to load ads, so **the navigation speed increases**
 * **It doesn't require additional software**
@@ -26,9 +27,11 @@ What advantages does it have?
 Download
 ----
 You can clone this repository using git
+
 ```
 git clone https://github.com/edieguez/adaway-py.git
 ```
+
 [download](https://github.com/edieguez/adaway-py/archive/master.zip)
 it as a zip file
 or even download a [compressed version](https://github.com/edieguez/adaway-py/blob/master/adaway.py?raw=true)
@@ -39,21 +42,25 @@ How to use it?
 ***If you are in Windows you need to use a command line with administrative rights and erase the 'sudo' command***
 
 Just enter in the script directory and type
+
 ```sh
 sudo ./__main__.py
 ```
+
 you can execute it from the outside folder with
+
 ```sh
 sudo python adaway-py
 ```
 
 or if you use the compressed file
+
 ```sh
 sudo ./adaway.py
 ```
 
-
 You can use some flags to do specific actions
+
 ```
 Optional arguments:
   -h, --help   show this help message and exit
@@ -72,37 +79,42 @@ The configuration file is generated in the first run and it looks like this
 
 ```json
 {
-    "blacklist": [
-      "www.nsa.gov",
-      "somenastydomain.com"
-    ],
-    "custom_hosts": {
-      "mydomain.com": "127.0.0.1",
-      "itanimulli.com": "50.63.202.25"
-    },
-    "host_files": [
-        "http://adaway.org/hosts.txt",
-        "http://hosts-file.net/ad_servers.asp",
-        "http://winhelp2002.mvps.org/hosts.txt",
-        "http://someonewhocares.org/hosts/hosts"
-    ],
-    "whitelist": [
-        "adf.ly",
-        "www.linkbucks.com"
-    ]
+  "blacklist": [
+    "www.nsa.gov",
+    "somenastydomain.com"
+  ],
+  "custom_hosts": {
+    "mydomain.com": "127.0.0.1",
+    "itanimulli.com": "50.63.202.25"
+  },
+  "host_files": [
+    "http://adaway.org/hosts.txt",
+    "http://hosts-file.net/ad_servers.asp",
+    "http://winhelp2002.mvps.org/hosts.txt",
+    "http://someonewhocares.org/hosts/hosts"
+  ],
+  "whitelist": [
+    "adf.ly",
+    "www.linkbucks.com"
+  ]
 }
 ```
 
 It contains only four sections
+
 ### blacklist
+
 A list of domains that the script will block. It allows you to include hosts that are
 not in the hosts files
 
 ### custom_host
+
 A dictionary that allows you to personalize your own hosts
 
 ### host_files
+
 Contains all the source files to block ad domains
 
 ### whitelist
+
 A list of domains that the script won't block even if they are in one of the host files

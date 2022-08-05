@@ -4,7 +4,6 @@ from colorama import init, Fore, Style
 
 
 class Termcolor:
-
     """An object to print using color in the terminal."""
 
     def __init__(self):
@@ -20,7 +19,6 @@ class Termcolor:
         self.__write(f'[e] {message}', Fore.RED)
 
     def __write(self, message, format):
-
         """Print a formatted message."""
 
         print(f'  {format}{message}{Style.RESET_ALL}')
