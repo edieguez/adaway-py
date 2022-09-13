@@ -19,7 +19,9 @@ group.add_argument('-u', action='store_true', help='update database')
 args = parser.parse_args()
 
 config = Config()
-config.write()
+
+if not config.file_exists():
+    config.write_default()
 
 if args.d:
     database.export(None, True)

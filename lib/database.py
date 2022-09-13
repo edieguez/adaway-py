@@ -18,12 +18,12 @@ def create():
 
     returns True if the file exists, otherwise returns False.
     """
-    if os.path.exists(config.DATABASE):
+    if os.path.exists(config.database):
         return True
 
     termcolor.info('Creating dabatase')
 
-    with sqlite3.connect(config.DATABASE) as connection:
+    with sqlite3.connect(config.database) as connection:
         cursor = connection.cursor()
         sql = (
             'CREATE TABLE blacklist ('
@@ -37,12 +37,12 @@ def create():
 
 def populate():
     """Populate the database using hosts files as source."""
-    host_files = config.read('host_files')
+    host_files = config.read_key('host_files')
 
     for host_file in host_files:
         hosts = download_file(host_file)
 
-        with sqlite3.connect(config.DATABASE) as connection:
+        with sqlite3.connect(config.database) as connection:
             cursor = connection.cursor()
 
             for host in hosts:
@@ -59,7 +59,7 @@ def export(filename=None, deactivate=False):
     filename -- The file where the database will be exported
     deactivate -- If True the blocking will be deactivated
     """
-    filename = filename or config.FILENAME
+    filename = filename or config.filename
 
     with open(filename, 'w') as text_file:
         termcolor.info('Creating hosts file')
@@ -70,9 +70,9 @@ def export(filename=None, deactivate=False):
         text_file.write('127.0.0.1 %s\n' % 'localhost')
         text_file.write('::1       %s\n' % 'localhost')
 
-        blacklist = config.read('blacklist')
-        custom_hosts = config.read('custom_hosts')
-        whitelist = config.read('whitelist')
+        blacklist = config.read_key('blacklist')
+        custom_hosts = config.read_key('custom_hosts')
+        whitelist = config.read_key('whitelist')
         whitelist.append('localhost')
 
         if custom_hosts:
@@ -89,7 +89,7 @@ def export(filename=None, deactivate=False):
                 for host in blacklist:
                     text_file.write('%s\t%s\n' % ('0.0.0.0', host))
 
-            with sqlite3.connect(config.DATABASE) as connection:
+            with sqlite3.connect(config.database) as connection:
                 cursor = connection.cursor()
 
                 text_file.write('\n# Blocked domains\n')

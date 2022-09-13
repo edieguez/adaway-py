@@ -13,57 +13,62 @@ class Config:
 
     def __init__(self):
         """Create a new config object."""
-        self.__BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        self.CONFIG = os.path.join(self.__BASE_DIR, 'config.json')
-        self.DATABASE = os.path.join(self.__BASE_DIR, 'adaway.db')
-        self.FILENAME = self.get_filename()
+        self.__base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        self.config = os.path.join(self.__base_dir, 'config.json')
+        self.database = os.path.join(self.__base_dir, 'adaway.db')
 
-    @staticmethod
-    def get_filename():
-        """Get the hosts file name for Linux/Mac OS or Windows."""
         if 'WINDIR' in os.environ:
-            FILENAME = os.path.join(
-                os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')
+            self.filename = os.path.join(os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')
         else:
-            FILENAME = '/etc/hosts'
+            self.filename = '/etc/hosts'
 
-        return FILENAME
-
-    def read(self, key):
+    def read_key(self, key):
         """Read a key from the config file.
 
         Keyword arguments:
-        key -- the key value to be readed
+        key -- the key to read
         """
-        with open(self.CONFIG) as raw_config:
-            json_file = json.load(raw_config)
+        return self._read()[key]
 
-            return json_file[key]
+    def modify_key(self, key, value):
+        current_config = self._read()
 
-    def write(self):
+        if key in current_config:
+            current_config[key] = value
+            self._write(current_config)
+
+    def file_exists(self):
+        return os.path.exists(self.config)
+
+    def write_default(self):
         """Create the default config file if not exists."""
-        if os.path.exists(self.CONFIG):
-            return
-
         termcolor.info('Creating config file')
 
-        with open(self.CONFIG, 'w') as config_file:
-            raw_config = {
-                'host_files': [
-                    'http://adaway.org/hosts.txt',
-                    'http://hosts-file.net/ad_servers.asp',
-                    'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext',
-                    'http://winhelp2002.mvps.org/hosts.txt',
-                    'http://someonewhocares.org/hosts/hosts'
-                ],
-                'blacklist': [
-                ],
-                'custom_hosts': {
-                },
-                'whitelist': [
-                    'adf.ly',
-                    'www.linkbucks.com'
-                ]
-            }
+        raw_config = {
+            'host_files': [
+                'http://adaway.org/hosts.txt',
+                'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext',
+                'http://winhelp2002.mvps.org/hosts.txt',
+                'http://someonewhocares.org/hosts/hosts'
+            ],
+            'blacklist': [
+            ],
+            'custom_hosts': {
+            },
+            'whitelist': [
+                'adf.ly',
+                'www.linkbucks.com'
+            ]
+        }
 
-            json.dump(raw_config, config_file, indent=4)
+        self._write(raw_config)
+
+    def _write(self, body) -> None:
+        with open(self.config, 'w') as config_file:
+            json.dump(body, config_file, indent=4)
+
+    def _read(self) -> dict:
+        with open(self.config) as raw_config:
+            json_file = json.load(raw_config)
+
+            return json_file
