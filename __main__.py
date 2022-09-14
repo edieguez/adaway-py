@@ -1,31 +1,12 @@
 #! /usr/bin/env python
 """A python3 script to block publicity."""
 
-import sys
-from argparse import ArgumentParser
-
-from lib.config import Config
 from lib import util
 
-# Argument parsing
-parser = ArgumentParser(description='A python3 script to block publicity')
-parser.add_argument('-o', dest='filename', help='output file')
+if __name__ == '__main__':
+    args = util.parse_arguments()
 
-group = parser.add_mutually_exclusive_group()
-group.add_argument('-a', action='store_true', help='apply blocking')
-group.add_argument('-d', action='store_true', help='deactivate blocking')
-group.add_argument('-u', action='store_true', help='update database')
-
-args = parser.parse_args()
-
-config = Config()
-
-if not config.file_exists():
-    config.write_default()
-
-if not util.database_exists():
-    util.create_default_database()
-
-util.populate_database()
-
-util.export_hosts_file(args.filename)
+    util.create_configuration()
+    util.create_database()
+    util.populate_database()
+    util.export_hosts_file(args.filename)
