@@ -5,7 +5,7 @@ import sys
 from argparse import ArgumentParser
 
 from lib.config import Config
-from lib import database
+from lib import util
 
 # Argument parsing
 parser = ArgumentParser(description='A python3 script to block publicity')
@@ -23,14 +23,9 @@ config = Config()
 if not config.file_exists():
     config.write_default()
 
-if args.d:
-    database.export(None, True)
-    sys.exit(0)
+if not util.database_exists():
+    util.create_default_database()
 
-args.u = not database.create()
+util.populate_database()
 
-if not args.a or args.u:
-    database.populate()
-
-if not args.u or args.a or not sys.argv[1:]:
-    database.export(args.filename)
+util.export_hosts_file(args.filename)
