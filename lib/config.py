@@ -56,8 +56,6 @@ class Config:
             'custom_hosts': {
             },
             'whitelist': [
-                'adf.ly',
-                'www.linkbucks.com'
             ]
         }
 

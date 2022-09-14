@@ -12,6 +12,9 @@ def parse_arguments():
     group.add_argument('-a', action='store_true', help='apply blocking')
     group.add_argument('-d', action='store_true', help='deactivate blocking')
 
+    group.add_argument('-w', metavar='host', nargs='+', help='whitelist one or multiple hosts')
+    group.add_argument('-w', metavar='host', nargs='+', help='whitelist one or multiple hosts')
+
     return parser.parse_args()
 
 
@@ -38,6 +41,18 @@ def fully_apply_host_blocking(filename):
 
     _populate_database()
     _export_hosts_file(filename)
+
+
+def whitelist_hosts(filename: str, hosts: list) -> None:
+    if hosts:
+        config = _create_configuration()
+
+        whitelist = set(config.read_key('whitelist'))
+        whitelist.update(hosts)
+
+        config.modify_key('whitelist', sorted(whitelist))
+
+        apply_host_blocking(filename)
 
 
 def _create_configuration():
