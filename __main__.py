@@ -6,7 +6,9 @@ from lib import util
 if __name__ == '__main__':
     args = util.parse_arguments()
 
-    util.create_configuration()
-    util.create_database()
-    util.populate_database()
-    util.export_hosts_file(args.filename)
+    if args.a:
+        util.apply_host_blocking(args.filename)
+    elif args.d:
+        util.deactivate_host_blocking(args.filename)
+    else:
+        util.fully_apply_host_blocking(args.filename)

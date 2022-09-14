@@ -36,8 +36,6 @@ def export_hosts_headers(filename):
             for host, ip in custom_hosts:
                 hosts_file.write(f'{ip}\t{host}\n')
 
-        hosts_file.write('\n')
-
 
 def export_hosts_file(filename=None):
     """Export the database to a text file.
@@ -49,18 +47,21 @@ def export_hosts_file(filename=None):
     filename = filename or config.filename
 
     with open(filename, 'a') as hosts_file:
-        blacklist = config.read_key('blacklist')
+        blacklisted_hosts = config.read_key('blacklist')
 
-        if blacklist:
-            hosts_file.write('# Blacklisted hosts\n')
+        if blacklisted_hosts:
+            hosts_file.write('\n# Blacklisted hosts\n')
 
-            for host in blacklist:
+            for host in blacklisted_hosts:
                 hosts_file.write('%s\t%s\n' % ('0.0.0.0', host))
 
-        for host in database.get_blocked_hosts():
-            try:
-                hosts_file.write(f'0.0.0.0\t{host}\n')
-            except UnicodeEncodeError as ex:
-                termcolor.error(str(ex))
+        blocked_hosts = database.get_blocked_hosts()
 
-        hosts_file.write('\n')
+        if blocked_hosts:
+            hosts_file.write('\n')
+
+            for host in blocked_hosts:
+                try:
+                    hosts_file.write(f'0.0.0.0\t{host}\n')
+                except UnicodeEncodeError as ex:
+                    termcolor.error(str(ex))

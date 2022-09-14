@@ -1,8 +1,8 @@
 import os
 import sqlite3
 
-from lib.network import download_file
 from lib.file_util import config, termcolor
+from lib.network import download_file
 
 
 def database_exists():

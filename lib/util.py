@@ -11,12 +11,36 @@ def parse_arguments():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-a', action='store_true', help='apply blocking')
     group.add_argument('-d', action='store_true', help='deactivate blocking')
-    group.add_argument('-u', action='store_true', help='update database')
 
     return parser.parse_args()
 
 
-def create_configuration():
+def apply_host_blocking(filename):
+    _create_configuration()
+
+    if not database.database_exists():
+        database.create_default_database()
+        _populate_database()
+
+    _export_hosts_file(filename)
+
+
+def deactivate_host_blocking(filename):
+    _create_configuration()
+    file_util.export_hosts_headers(filename)
+
+
+def fully_apply_host_blocking(filename):
+    _create_configuration()
+
+    if not database.database_exists():
+        database.create_default_database()
+
+    _populate_database()
+    _export_hosts_file(filename)
+
+
+def _create_configuration():
     config = Config()
 
     if not config.file_exists():
@@ -25,14 +49,9 @@ def create_configuration():
     return config
 
 
-def create_database():
-    if not database.database_exists():
-        database.create_default_database()
-
-
-def populate_database():
+def _populate_database():
     database.populate_database()
 
 
-def export_hosts_file(filename):
+def _export_hosts_file(filename):
     file_util.export_hosts_file(filename)
