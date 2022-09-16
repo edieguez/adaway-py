@@ -62,6 +62,6 @@ def export_hosts_file(filename=None):
 
             for host in blocked_hosts:
                 try:
-                    hosts_file.write(f'0.0.0.0\t{host}\n')
+                    hosts_file.write(f'0.0.0.0\t{host[0]}\n')
                 except UnicodeEncodeError as ex:
                     termcolor.error(str(ex))

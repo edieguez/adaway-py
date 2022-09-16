@@ -1,7 +1,8 @@
 import os
 import sqlite3
+from sqlite3 import Cursor
 
-from lib.file_util import config, termcolor
+from lib.filesystem import config, termcolor
 from lib.network import download_file
 
 
@@ -12,14 +13,13 @@ def database_exists():
 
 def create_default_database():
     """Create a new database"""
-    termcolor.info('Creating dabatase')
+    termcolor.info('Creating database')
 
     with sqlite3.connect(config.database) as connection:
         cursor = connection.cursor()
 
         sql = (
             'CREATE TABLE blacklist ('
-            '    id INTEGER NOT NULL PRIMARY KEY,'
             '    hostname TEXT NOT NULL UNIQUE'
             ');'
         )
@@ -39,19 +39,20 @@ def populate_database():
 
             for host in hosts:
                 try:
-                    cursor.execute('INSERT INTO blacklist VALUES(NULL, ?)', (host,))
+                    cursor.execute('INSERT INTO blacklist VALUES(?)', (host,))
                 except sqlite3.IntegrityError:
                     pass
 
 
-def get_blocked_hosts() -> list:
+def get_blocked_hosts() -> Cursor:
     whitelist = config.read_key('whitelist')
     whitelist.append('localhost')
 
     with sqlite3.connect(config.database) as connection:
         cursor = connection.cursor()
 
-        hosts = cursor.execute('SELECT hostname FROM blacklist')
-        hosts = set([host[0] for host in hosts])
-
-        return sorted(hosts.difference(whitelist))
+        return cursor.execute(
+            f'''SELECT hostname FROM blacklist
+            WHERE hostname NOT IN ({','.join(['?'] * len(whitelist))})
+            ORDER BY hostname''', whitelist
+        )

@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 
-from lib import database, file_util
+from lib import database, filesystem
 from lib.config import Config
 
 
@@ -30,7 +30,7 @@ def apply_host_blocking(filename):
 
 def deactivate_host_blocking(filename):
     _create_configuration()
-    file_util.export_hosts_headers(filename)
+    filesystem.export_hosts_headers(filename)
 
 
 def fully_apply_host_blocking(filename):
@@ -89,4 +89,4 @@ def _populate_database():
 
 
 def _export_hosts_file(filename):
-    file_util.export_hosts_file(filename)
+    filesystem.export_hosts_file(filename)
