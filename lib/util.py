@@ -1,7 +1,9 @@
 from argparse import ArgumentParser
 
-from lib import database, filesystem
-from lib.config import Config
+from lib import filesystem
+from lib import network
+from lib.config import Config, termcolor
+from lib.database import Database
 
 
 def parse_arguments():
@@ -19,13 +21,23 @@ def parse_arguments():
 
 
 def apply_host_blocking(filename):
-    _create_configuration()
+    config = _create_configuration()
+    database = Database(config.database)
 
     if not database.database_exists():
+        termcolor.warn('Creating default database')
         database.create_default_database()
-        _populate_database()
 
-    _export_hosts_file(filename)
+        for hosts in _download_host_files(config.read_key('host_files')):
+            database.populate_database(hosts)
+
+    whitelisted_hosts = config.read_key('whitelist')
+    _export_hosts_file(filename, database.get_blocked_hosts(whitelisted_hosts), config.read_key('blacklist'))
+
+
+def _download_host_files(host_files):
+    for host_file in host_files:
+        yield network.download_file(host_file)
 
 
 def deactivate_host_blocking(filename):
@@ -34,45 +46,48 @@ def deactivate_host_blocking(filename):
 
 
 def fully_apply_host_blocking(filename):
-    _create_configuration()
+    config = _create_configuration()
+    database = Database(config.database)
 
     if not database.database_exists():
+        termcolor.warn('Creating default database')
         database.create_default_database()
 
-    _populate_database()
-    _export_hosts_file(filename)
+    for hosts in _download_host_files(config.read_key('host_files')):
+        database.populate_database(hosts)
+
+    whitelisted_hosts = config.read_key('whitelist')
+    _export_hosts_file(filename, database.get_blocked_hosts(whitelisted_hosts), config.read_key('blacklist'))
 
 
 def whitelist_hosts(filename: str, hosts: list) -> None:
-    if hosts:
-        config = _create_configuration()
+    config = _create_configuration()
 
-        whitelist = set(config.read_key('whitelist'))
-        whitelist.update(hosts)
+    whitelist = set(config.read_key('whitelist'))
+    whitelist.update(hosts)
 
-        blacklist = set(config.read_key('blacklist'))
-        blacklist = blacklist.difference(whitelist)
+    blacklist = set(config.read_key('blacklist'))
+    blacklist = blacklist.difference(whitelist)
 
-        config.modify_key('whitelist', sorted(whitelist))
-        config.modify_key('blacklist', sorted(blacklist))
+    config.modify_key('whitelist', sorted(whitelist))
+    config.modify_key('blacklist', sorted(blacklist))
 
-        apply_host_blocking(filename)
+    apply_host_blocking(filename)
 
 
 def blacklist_hosts(filename: str, hosts: list) -> None:
-    if hosts:
-        config = _create_configuration()
+    config = _create_configuration()
 
-        blacklist = set(config.read_key('blacklist'))
-        blacklist.update(hosts)
+    blacklist = set(config.read_key('blacklist'))
+    blacklist.update(hosts)
 
-        whitelist = set(config.read_key('whitelist'))
-        whitelist = whitelist.difference(blacklist)
+    whitelist = set(config.read_key('whitelist'))
+    whitelist = whitelist.difference(blacklist)
 
-        config.modify_key('whitelist', sorted(whitelist))
-        config.modify_key('blacklist', sorted(blacklist))
+    config.modify_key('whitelist', sorted(whitelist))
+    config.modify_key('blacklist', sorted(blacklist))
 
-        apply_host_blocking(filename)
+    apply_host_blocking(filename)
 
 
 def _create_configuration():
@@ -84,9 +99,5 @@ def _create_configuration():
     return config
 
 
-def _populate_database():
-    database.populate_database()
-
-
-def _export_hosts_file(filename):
-    filesystem.export_hosts_file(filename)
+def _export_hosts_file(filename, blocked_hosts, blacklisted_hosts):
+    filesystem.export_hosts_file(filename, blocked_hosts, blacklisted_hosts)

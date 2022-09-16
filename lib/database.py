@@ -2,57 +2,49 @@ import os
 import sqlite3
 from sqlite3 import Cursor
 
-from lib.filesystem import config, termcolor
-from lib.network import download_file
 
+class Database:
+    def __init__(self, filename):
+        self.filename = filename
 
-def database_exists():
-    """Returns True if the file exists, otherwise returns False"""
-    return os.path.exists(config.database)
+    def database_exists(self):
+        """Returns True if the file exists, otherwise returns False"""
+        return os.path.exists(self.filename)
 
+    def create_default_database(self):
+        """Create a new database"""
 
-def create_default_database():
-    """Create a new database"""
-    termcolor.info('Creating database')
-
-    with sqlite3.connect(config.database) as connection:
-        cursor = connection.cursor()
-
-        sql = (
-            'CREATE TABLE blacklist ('
-            '    hostname TEXT NOT NULL UNIQUE'
-            ');'
-        )
-
-        cursor.execute(sql)
-
-
-def populate_database():
-    """Populate the database using hosts files as source."""
-    host_files = config.read_key('host_files')
-
-    for host_file in host_files:
-        hosts = download_file(host_file)
-
-        with sqlite3.connect(config.database) as connection:
+        with sqlite3.connect(self.filename) as connection:
             cursor = connection.cursor()
 
-            for host in hosts:
-                try:
-                    cursor.execute('INSERT INTO blacklist VALUES(?)', (host,))
-                except sqlite3.IntegrityError:
-                    pass
+            sql = (
+                'CREATE TABLE blacklist ('
+                '    hostname TEXT NOT NULL UNIQUE'
+                ');'
+            )
 
+            cursor.execute(sql)
 
-def get_blocked_hosts() -> Cursor:
-    whitelist = config.read_key('whitelist')
-    whitelist.append('localhost')
+    def populate_database(self, hosts):
+        """Populate the database using hosts files as source."""
+        if hosts:
+            with sqlite3.connect(self.filename) as connection:
+                cursor = connection.cursor()
 
-    with sqlite3.connect(config.database) as connection:
-        cursor = connection.cursor()
+                for host in hosts:
+                    try:
+                        cursor.execute('INSERT INTO blacklist VALUES(?)', (host,))
+                    except sqlite3.IntegrityError:
+                        pass
 
-        return cursor.execute(
-            f'''SELECT hostname FROM blacklist
-            WHERE hostname NOT IN ({','.join(['?'] * len(whitelist))})
-            ORDER BY hostname''', whitelist
-        )
+    def get_blocked_hosts(self, whitelist: list) -> Cursor:
+        whitelist.append('localhost')
+
+        with sqlite3.connect(self.filename) as connection:
+            cursor = connection.cursor()
+
+            return cursor.execute(
+                f'''SELECT hostname FROM blacklist
+                WHERE hostname NOT IN ({','.join(['?'] * len(whitelist))})
+                ORDER BY hostname''', whitelist
+            )

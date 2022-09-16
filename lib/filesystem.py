@@ -3,7 +3,6 @@
 import operator
 from socket import gethostname
 
-from lib import database
 from lib.config import Config
 from lib.termcolor import Termcolor
 
@@ -37,25 +36,20 @@ def export_hosts_headers(filename):
                 hosts_file.write(f'{ip}\t{host}\n')
 
 
-def export_hosts_file(filename=None):
+def export_hosts_file(filename, blocked_hosts, blacklisted_hosts):
     """Export the database to a text file.
 
     Keyword arguments:
     filename -- The file where the database will be exported
     """
     export_hosts_headers(filename)
-    filename = filename or config.filename
 
     with open(filename, 'a') as hosts_file:
-        blacklisted_hosts = config.read_key('blacklist')
-
         if blacklisted_hosts:
             hosts_file.write('\n# Blacklisted hosts\n')
 
             for host in blacklisted_hosts:
                 hosts_file.write('%s\t%s\n' % ('0.0.0.0', host))
-
-        blocked_hosts = database.get_blocked_hosts()
 
         if blocked_hosts:
             hosts_file.write('\n')
