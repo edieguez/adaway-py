@@ -3,20 +3,16 @@
 import operator
 from socket import gethostname
 
-from lib.config import Config
 from lib.termcolor import Termcolor
 
-config = Config()
 termcolor = Termcolor()
 
 
-def export_hosts_headers(filename):
+def export_hosts_headers(filename, custom_hosts):
     """
     Keyword arguments:
     filename -- The file where the database will be exported
     """
-    filename = filename or config.filename
-
     with open(filename, 'w') as hosts_file:
         termcolor.info('Creating hosts file')
 
@@ -26,8 +22,6 @@ def export_hosts_headers(filename):
         hosts_file.write(f'127.0.0.1 localhost\n')
         hosts_file.write(f'::1       localhost\n')
 
-        custom_hosts = config.read_key('custom_hosts')
-
         if custom_hosts:
             hosts_file.write('\n# Custom hosts\n')
             custom_hosts = sorted(custom_hosts.items(), key=operator.itemgetter(1))
@@ -36,13 +30,13 @@ def export_hosts_headers(filename):
                 hosts_file.write(f'{ip}\t{host}\n')
 
 
-def export_hosts_file(filename, blocked_hosts, blacklisted_hosts):
+def export_hosts_file(filename, custom_hosts, blocked_hosts, blacklisted_hosts):
     """Export the database to a text file.
 
     Keyword arguments:
     filename -- The file where the database will be exported
     """
-    export_hosts_headers(filename)
+    export_hosts_headers(filename, custom_hosts)
 
     with open(filename, 'a') as hosts_file:
         if blacklisted_hosts:

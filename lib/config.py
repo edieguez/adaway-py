@@ -11,16 +11,18 @@ termcolor = Termcolor()
 class Config:
     """An object to manage the AdAway configuration variables."""
 
-    def __init__(self):
+    def __init__(self, hosts_file):
         """Create a new config object."""
         self.__base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         self.config = os.path.join(self.__base_dir, 'config.json')
         self.database = os.path.join(self.__base_dir, 'adaway.db')
 
-        if 'WINDIR' in os.environ:
-            self.filename = os.path.join(os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')
+        if hosts_file:
+            self.hosts_file = hosts_file
+        elif 'WINDIR' in os.environ:
+            self.hosts_file = os.path.join(os.environ.get('WINDIR'), 'System32', 'Drivers', 'etc', 'hosts')
         else:
-            self.filename = '/etc/hosts'
+            self.hosts_file = '/etc/hosts'
 
     def read_key(self, key):
         """Read a key from the config file.

@@ -8,7 +8,7 @@ from lib.database import Database
 
 def parse_arguments():
     parser = ArgumentParser(description='A python3 script to block publicity')
-    parser.add_argument('-o', dest='filename', help='output file')
+    parser.add_argument('-o', dest='hosts_file', help='output file')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-a', action='store_true', help='apply blocking')
@@ -20,8 +20,8 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def apply_host_blocking(filename):
-    config = _create_configuration()
+def apply_host_blocking(hosts_file):
+    config = _create_configuration(hosts_file)
     database = Database(config.database)
 
     if not database.database_exists():
@@ -31,8 +31,12 @@ def apply_host_blocking(filename):
         for hosts in _download_host_files(config.read_key('host_files')):
             database.populate_database(hosts)
 
+    custom_hosts = config.read_key('custom_hosts')
     whitelisted_hosts = config.read_key('whitelist')
-    _export_hosts_file(filename, database.get_blocked_hosts(whitelisted_hosts), config.read_key('blacklist'))
+    blocked_hosts = database.get_blocked_hosts(whitelisted_hosts)
+    blacklisted_hosts = config.read_key('blacklist')
+
+    _export_hosts_file(hosts_file, custom_hosts, blocked_hosts, blacklisted_hosts)
 
 
 def _download_host_files(host_files):
@@ -40,13 +44,15 @@ def _download_host_files(host_files):
         yield network.download_file(host_file)
 
 
-def deactivate_host_blocking(filename):
-    _create_configuration()
-    filesystem.export_hosts_headers(filename)
+def deactivate_host_blocking(hosts_file):
+    config = _create_configuration(hosts_file)
+    custom_hosts = config.read_key('custom_hosts')
+
+    filesystem.export_hosts_headers(hosts_file, custom_hosts)
 
 
-def fully_apply_host_blocking(filename):
-    config = _create_configuration()
+def fully_apply_host_blocking(hosts_file):
+    config = _create_configuration(hosts_file)
     database = Database(config.database)
 
     if not database.database_exists():
@@ -56,12 +62,16 @@ def fully_apply_host_blocking(filename):
     for hosts in _download_host_files(config.read_key('host_files')):
         database.populate_database(hosts)
 
+    custom_hosts = config.read_key('custom_hosts')
     whitelisted_hosts = config.read_key('whitelist')
-    _export_hosts_file(filename, database.get_blocked_hosts(whitelisted_hosts), config.read_key('blacklist'))
+    blocked_hosts = database.get_blocked_hosts(whitelisted_hosts)
+    blacklisted_hosts = config.read_key('blacklist')
+
+    _export_hosts_file(hosts_file, custom_hosts, blocked_hosts, blacklisted_hosts)
 
 
-def whitelist_hosts(filename: str, hosts: list) -> None:
-    config = _create_configuration()
+def whitelist_hosts(hosts_file: str, hosts: list) -> None:
+    config = _create_configuration(hosts_file)
 
     whitelist = set(config.read_key('whitelist'))
     whitelist.update(hosts)
@@ -72,11 +82,11 @@ def whitelist_hosts(filename: str, hosts: list) -> None:
     config.modify_key('whitelist', sorted(whitelist))
     config.modify_key('blacklist', sorted(blacklist))
 
-    apply_host_blocking(filename)
+    apply_host_blocking(hosts_file)
 
 
-def blacklist_hosts(filename: str, hosts: list) -> None:
-    config = _create_configuration()
+def blacklist_hosts(hosts_file: str, hosts: list) -> None:
+    config = _create_configuration(hosts_file)
 
     blacklist = set(config.read_key('blacklist'))
     blacklist.update(hosts)
@@ -87,11 +97,11 @@ def blacklist_hosts(filename: str, hosts: list) -> None:
     config.modify_key('whitelist', sorted(whitelist))
     config.modify_key('blacklist', sorted(blacklist))
 
-    apply_host_blocking(filename)
+    apply_host_blocking(hosts_file)
 
 
-def _create_configuration():
-    config = Config()
+def _create_configuration(hosts_file):
+    config = Config(hosts_file)
 
     if not config.file_exists():
         config.write_default()
@@ -99,5 +109,5 @@ def _create_configuration():
     return config
 
 
-def _export_hosts_file(filename, blocked_hosts, blacklisted_hosts):
-    filesystem.export_hosts_file(filename, blocked_hosts, blacklisted_hosts)
+def _export_hosts_file(hosts_file, custom_hosts, blocked_hosts, blacklisted_hosts):
+    filesystem.export_hosts_file(hosts_file, custom_hosts, blocked_hosts, blacklisted_hosts)
