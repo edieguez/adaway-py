@@ -36,7 +36,7 @@ def apply_host_blocking(hosts_file):
     blocked_hosts = database.get_blocked_hosts(whitelisted_hosts)
     blacklisted_hosts = config.read_key('blacklist')
 
-    _export_hosts_file(hosts_file, custom_hosts, blocked_hosts, blacklisted_hosts)
+    _export_hosts_file(config.hosts_file, custom_hosts, blocked_hosts, blacklisted_hosts)
 
 
 def _download_host_files(host_files):
@@ -67,7 +67,7 @@ def fully_apply_host_blocking(hosts_file):
     blocked_hosts = database.get_blocked_hosts(whitelisted_hosts)
     blacklisted_hosts = config.read_key('blacklist')
 
-    _export_hosts_file(hosts_file, custom_hosts, blocked_hosts, blacklisted_hosts)
+    _export_hosts_file(config.hosts_file, custom_hosts, blocked_hosts, blacklisted_hosts)
 
 
 def whitelist_hosts(hosts_file: str, hosts: list) -> None:
