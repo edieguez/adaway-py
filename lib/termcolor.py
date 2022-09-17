@@ -1,24 +1,24 @@
 """A simple class to print in colors."""
 
-from colorama import init, Fore, Style
+from colorama import init, Fore
 
 
 class Termcolor:
     """An object to print using color in the terminal."""
 
     def __init__(self):
-        init()
+        init(True)
 
     def info(self, message):
-        self.__write(f'[i] {message}', Fore.BLUE)
+        self._write(f'[i] {message}', Fore.BLUE)
 
     def warn(self, message):
-        self.__write(f'[w] {message}', Fore.YELLOW)
+        self._write(f'[w] {message}', Fore.YELLOW)
 
     def error(self, message):
-        self.__write(f'[e] {message}', Fore.RED)
+        self._write(f'[e] {message}', Fore.RED)
 
-    def __write(self, message, format):
+    def _write(self, message, format_):
         """Print a formatted message."""
 
-        print(f'  {format}{message}{Style.RESET_ALL}')
+        print(f'  {format_}{message}')
