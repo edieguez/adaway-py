@@ -47,13 +47,13 @@ sudo ./adaway.py
 You can use some flags to do specific actions
 
 ``` shell
-usage: adaway.py [-h] [-o FILENAME] [-a | -d | -w host [host ...] | -b host [host ...]]
+usage: adaway.py [-h] [-o HOSTS_FILE] [-a | -d | -w host [host ...] | -b host [host ...]]
 
-A python3 script to block publicity
+A python3 script to block ads using the hosts file
 
 options:
   -h, --help          show this help message and exit
-  -o FILENAME         output file
+  -o HOSTS_FILE       output file
   -a                  apply blocking
   -d                  deactivate blocking
   -w host [host ...]  whitelist one or multiple hosts

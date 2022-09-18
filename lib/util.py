@@ -7,7 +7,7 @@ from lib.database import Database
 
 
 def parse_arguments():
-    parser = ArgumentParser(description='A python3 script to block publicity')
+    parser = ArgumentParser(description='A python3 script to block ads using the hosts file')
     parser.add_argument('-o', dest='hosts_file', help='output file')
 
     group = parser.add_mutually_exclusive_group()
