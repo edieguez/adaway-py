@@ -17,6 +17,7 @@ def parse_arguments():
     group.add_argument('-w', metavar='host', nargs='+', help='whitelist one or multiple hosts')
     group.add_argument('-W', metavar='host', nargs='+', help='remove from white list one or multiple hosts')
     group.add_argument('-b', metavar='host', nargs='+', help='blacklist one or multiple hosts')
+    group.add_argument('-B', metavar='host', nargs='+', help='remove from black list one or multiple hosts')
 
     return parser.parse_args()
 
@@ -107,6 +108,17 @@ def blacklist_hosts(hosts_file: str, hosts: list) -> None:
     whitelist = whitelist.difference(blacklist)
 
     config.modify_key('whitelist', sorted(whitelist))
+    config.modify_key('blacklist', sorted(blacklist))
+
+    apply_host_blocking(hosts_file)
+
+
+def remove_blacklisted_hosts(hosts_file: str, hosts: list) -> None:
+    config = _create_configuration(hosts_file)
+
+    blacklist = set(config.read_key('blacklist'))
+    blacklist = blacklist.difference(hosts)
+
     config.modify_key('blacklist', sorted(blacklist))
 
     apply_host_blocking(hosts_file)

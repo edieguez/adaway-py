@@ -16,5 +16,7 @@ if __name__ == '__main__':
         util.remove_whitelisted_hosts(args.hosts_file, args.W)
     elif args.b:
         util.blacklist_hosts(args.hosts_file, args.b)
+    elif args.B:
+        util.remove_blacklisted_hosts(args.hosts_file, args.B)
     else:
         util.fully_apply_host_blocking(args.hosts_file)
