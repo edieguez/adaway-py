@@ -15,6 +15,7 @@ def parse_arguments():
     group.add_argument('-d', action='store_true', help='deactivate blocking')
 
     group.add_argument('-w', metavar='host', nargs='+', help='whitelist one or multiple hosts')
+    group.add_argument('-W', metavar='host', nargs='+', help='remove from white list one or multiple hosts')
     group.add_argument('-b', metavar='host', nargs='+', help='blacklist one or multiple hosts')
 
     return parser.parse_args()
@@ -81,6 +82,17 @@ def whitelist_hosts(hosts_file: str, hosts: list) -> None:
 
     config.modify_key('whitelist', sorted(whitelist))
     config.modify_key('blacklist', sorted(blacklist))
+
+    apply_host_blocking(hosts_file)
+
+
+def remove_whitelisted_hosts(hosts_file: str, hosts: list) -> None:
+    config = _create_configuration(hosts_file)
+
+    whitelist = set(config.read_key('whitelist'))
+    whitelist = whitelist.difference(hosts)
+
+    config.modify_key('whitelist', sorted(whitelist))
 
     apply_host_blocking(hosts_file)
 
