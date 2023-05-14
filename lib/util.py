@@ -50,7 +50,7 @@ def deactivate_host_blocking(hosts_file):
     config = _create_configuration(hosts_file)
     custom_hosts = config.read_key('custom_hosts')
 
-    filesystem.export_hosts_headers(hosts_file, custom_hosts)
+    filesystem.export_hosts_headers(config.hosts_file, custom_hosts)
 
 
 def fully_apply_host_blocking(hosts_file):
