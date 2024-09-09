@@ -28,7 +28,7 @@ def download_file(file_):
         termcolor.error(f'{file_} - {str(ex)}')
         return list()
 
-    regex = re.compile('^(?:[0-9]{1,3}\.){3}[0-9]{1,3} [^\s]+')
+    regex = re.compile('^(?:[0-9]{1,3}\\.){3}[0-9]{1,3} [^\\s]+')
     domains = list()
 
     for domain in data:
