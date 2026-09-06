@@ -1,13 +1,14 @@
 """Download a file from internet."""
 
 import re
-import socket
 from urllib import request
-from urllib.error import URLError
 
 from lib.termcolor import Termcolor
 
 termcolor = Termcolor()
+
+# Some sources answer 403 to the default urllib agent
+USER_AGENT = 'adaway-py (+https://github.com/edieguez/adaway-py)'
 
 
 def download_file(file_):
@@ -19,16 +20,17 @@ def download_file(file_):
     termcolor.info(f'Downloading source file: {file_}')
 
     try:
-        data = request.urlopen(file_, timeout=3).read()
+        source = request.Request(file_, headers={'User-Agent': USER_AGENT})
+        data = request.urlopen(source, timeout=30).read()
         data = data.decode('utf-8').split('\n')
-    except socket.timeout:
-        termcolor.warn('Timeout, aborting')
-        return list()
-    except URLError as ex:
+    except OSError as ex:
+        # URLError, timeouts and SSL failures are all OSError subclasses. One
+        # unreachable source must not abort the remaining ones
         termcolor.error(f'{file_} - {str(ex)}')
         return list()
 
-    regex = re.compile('^(?:[0-9]{1,3}\\.){3}[0-9]{1,3} [^\\s]+')
+    # Separator is \s+ because some sources align entries with tabs
+    regex = re.compile('^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\s+[^\\s]+')
     domains = list()
 
     for domain in data:

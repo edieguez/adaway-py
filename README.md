@@ -47,7 +47,8 @@ sudo ./adaway.py
 You can use some flags to do specific actions
 
 ``` shell
-usage: adaway.py [-h] [-o HOSTS_FILE] [-a | -d | -w host [host ...] | -b host [host ...]]
+usage: adaway.py [-h] [-o HOSTS_FILE]
+                 [-a | -d | -w host [host ...] | -W host [host ...] | -b host [host ...] | -B host [host ...]]
 
 A python3 script to block ads using the hosts file
 
@@ -57,8 +58,15 @@ options:
   -a                  apply blocking
   -d                  deactivate blocking
   -w host [host ...]  whitelist one or multiple hosts
+  -W host [host ...]  remove from white list one or multiple hosts
   -b host [host ...]  blacklist one or multiple hosts
+  -B host [host ...]  remove from black list one or multiple hosts
 ```
+
+Running it without any flag downloads the source files again and rebuilds the block list from scratch.
+`-a` reuses the hosts already stored locally, so it is the fast way to re-apply your changes.
+
+Whitelisting a domain also whitelists its subdomains, so `-w adf.ly` unblocks `www.adf.ly` too.
 
 ![AdAway-py 1](https://cloud.githubusercontent.com/assets/8973425/5060497/06d66564-6d1f-11e4-9823-d06b036eb42f.png)
 ![AdAway-py 2](https://cloud.githubusercontent.com/assets/8973425/5060496/06d4f94a-6d1f-11e4-928f-38e2a870bfdd.png)
@@ -78,10 +86,10 @@ The configuration file is generated in the first run and it looks like this
     "itanimulli.com": "50.63.202.25"
   },
   "host_files": [
-    "http://adaway.org/hosts.txt",
-    "http://hosts-file.net/ad_servers.asp",
-    "http://winhelp2002.mvps.org/hosts.txt",
-    "http://someonewhocares.org/hosts/hosts"
+    "https://adaway.org/hosts.txt",
+    "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext",
+    "https://winhelp2002.mvps.org/hosts.txt",
+    "https://someonewhocares.org/hosts/hosts"
   ],
   "whitelist": [
     "adf.ly",
@@ -107,4 +115,21 @@ Contains all the source files to block ad domains
 
 ### whitelist
 
-A list of domains that the script won't block even if they are in one of the host files
+A list of domains that the script won't block even if they are in one of the host files.
+Each entry also covers its subdomains
+
+## Development
+
+``` shell
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/python -m pytest
+```
+
+Use `-o` to try the script out without touching the real hosts file
+
+``` shell
+python3 . -o /tmp/hosts
+```
+
+`adaway.py` is a build artifact, not source. Rebuild it with `./build.sh` after changing anything under `lib/`

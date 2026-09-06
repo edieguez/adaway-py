@@ -13,7 +13,15 @@ class Config:
 
     def __init__(self, hosts_file):
         """Create a new config object."""
-        self.__base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        package_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        # Inside a zipapp the "directory" holding lib/ is the archive itself, so
+        # one more level up is needed to land beside the executable
+        if os.path.isfile(package_root):
+            self.__base_dir = os.path.dirname(package_root)
+        else:
+            self.__base_dir = package_root
+
         self.config = os.path.join(self.__base_dir, 'config.json')
         self.database = os.path.join(self.__base_dir, 'adaway.db')
 
@@ -48,10 +56,10 @@ class Config:
 
         raw_config = {
             'host_files': [
-                'http://adaway.org/hosts.txt',
-                'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext',
-                'http://winhelp2002.mvps.org/hosts.txt',
-                'http://someonewhocares.org/hosts/hosts'
+                'https://adaway.org/hosts.txt',
+                'https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext',
+                'https://winhelp2002.mvps.org/hosts.txt',
+                'https://someonewhocares.org/hosts/hosts'
             ],
             'blacklist': [
             ],
