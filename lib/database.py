@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from sqlite3 import Cursor
+from contextlib import closing
 
 
 class Database:
@@ -25,26 +25,28 @@ class Database:
 
             cursor.execute(sql)
 
+    def clear(self):
+        """Remove every hostname so a full refresh drops upstream deletions."""
+        with sqlite3.connect(self.filename) as connection:
+            connection.execute('DELETE FROM blacklist')
+
     def populate_database(self, hosts):
         """Populate the database using hosts files as source."""
         if hosts:
             with sqlite3.connect(self.filename) as connection:
-                cursor = connection.cursor()
+                connection.executemany(
+                    'INSERT OR IGNORE INTO blacklist VALUES(?)', ((host,) for host in hosts)
+                )
 
-                for host in hosts:
-                    try:
-                        cursor.execute('INSERT INTO blacklist VALUES(?)', (host,))
-                    except sqlite3.IntegrityError:
-                        pass
+    def get_blocked_hosts(self, whitelist: list) -> list:
+        exempt = tuple(set(whitelist) | {'localhost'})
 
-    def get_blocked_hosts(self, whitelist: list) -> Cursor:
-        whitelist.append('localhost')
+        with closing(sqlite3.connect(self.filename)) as connection:
+            rows = connection.execute('SELECT hostname FROM blacklist ORDER BY hostname').fetchall()
 
-        with sqlite3.connect(self.filename) as connection:
-            cursor = connection.cursor()
+        return [host for (host,) in rows if not _is_exempt(host, exempt)]
 
-            return cursor.execute(
-                f'''SELECT hostname FROM blacklist
-                WHERE hostname NOT IN ({','.join(['?'] * len(whitelist))})
-                ORDER BY hostname''', whitelist
-            )
+
+def _is_exempt(hostname: str, exempt: tuple) -> bool:
+    """A whitelisted domain also covers every one of its subdomains."""
+    return any(hostname == domain or hostname.endswith(f'.{domain}') for domain in exempt)

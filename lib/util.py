@@ -61,8 +61,16 @@ def fully_apply_host_blocking(hosts_file):
         termcolor.warn('Creating default database')
         database.create_default_database()
 
-    for hosts in _download_host_files(config.read_key('host_files')):
-        database.populate_database(hosts)
+    downloaded = [hosts for hosts in _download_host_files(config.read_key('host_files')) if hosts]
+
+    if downloaded:
+        # Rebuild from scratch so hosts dropped upstream stop being blocked
+        database.clear()
+
+        for hosts in downloaded:
+            database.populate_database(hosts)
+    else:
+        termcolor.warn('No source file could be downloaded, keeping the current database')
 
     custom_hosts = config.read_key('custom_hosts')
     whitelisted_hosts = config.read_key('whitelist')
